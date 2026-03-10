@@ -19,9 +19,9 @@ const TAB_COMPONENTS = {
 } satisfies Record<TabId, typeof EasterGuide>;
 
 const TAB_ITEMS = [
-  {id: 'guide', label: 'O que vender?', mobileLabel: 'Cardápio', icon: BookOpen},
-  {id: 'calculator', label: 'Precificação', mobileLabel: 'Preços', icon: Calculator},
-  {id: 'strategies', label: '20 Estratégias', mobileLabel: 'Vendas', icon: TrendingUp},
+  {id: 'guide', label: 'O que vender', mobileLabel: 'Cardápio', icon: BookOpen},
+  {id: 'calculator', label: 'Quanto cobrar', mobileLabel: 'Preço', icon: Calculator},
+  {id: 'strategies', label: 'Como vender', mobileLabel: 'Vendas', icon: TrendingUp},
 ] satisfies Array<{
   icon: typeof BookOpen;
   id: TabId;

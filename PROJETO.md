@@ -30,8 +30,8 @@
 
 O produto entrega **3 módulos** dentro de uma área de membros própria:
 
-### Módulo 1 — 15 Receitas com Apelo Comercial 🍫
-Guia completo com receitas lucrativas para a Páscoa, incluindo clássicos de alta saída e 5 extras inspiradas em tendências de conteúdo.
+### Módulo 1 — Cardápio Validado de Páscoa 🍫
+Guia com 10 receitas clássicas de maior segurança comercial + 5 queridinhos do TikTok para desejo visual e vitrine da campanha.
 
 | # | Receita | Preço Venda | Custo | Lucro | Margem | Status |
 |---|---------|-------------|-------|-------|--------|--------|
@@ -48,12 +48,12 @@ Guia completo com receitas lucrativas para a Páscoa, incluindo clássicos de al
 
 Cada receita inclui: card expandível, dashboard de precificação, ingredientes, passo a passo, dica de embalagem e links para referência em YouTube/TikTok.
 
-### Módulo 2 — Planilha de Precificação Automática 🧮
+### Módulo 2 — Precificação sem Chute 🧮
 Calculadora interativa: ingredientes → custos → embalagem → mão de obra → margens → preço de venda + lucro.
 **Status:** ✅ Implementado
 
-### Módulo 3 — Manual de Vendas: 20 Estratégias 📈
-10 estratégias de Páscoa + 10 gerais. Cada uma expandível com passo a passo de execução + download PDF via `window.print()`.
+### Módulo 3 — Execução Comercial VTSD 📈
+8 frentes centrais para a campanha de Páscoa + 4 próximos passos opcionais de monetização e continuidade. Cada uma expandível com passo a passo de execução + download PDF via `window.print()`.
 **Status:** ✅ Implementado
 
 ---
@@ -82,7 +82,7 @@ Calculadora interativa: ingredientes → custos → embalagem → mão de obra �
   - 5 novas **Queridinhos do TikTok** (Cenoura, Bark, Hot Choc Bomb, Geode, Churros)
 - Vídeos corrigidos: iframe quebrado substituído por links YouTube + TikTok que abrem em nova aba
 - Calculadora de precificação interativa (`PricingCalculator.tsx`)
-- 20 estratégias com passo a passo + PDF download (`SalesStrategies.tsx`, `StrategyCard.tsx`)
+- módulo de execução comercial VTSD com passo a passo + PDF download (`SalesStrategies.tsx`, `StrategyCard.tsx`)
 - AuthContext com autenticação real via API (`AuthContext.tsx`)
 - **Backend Express + SQLite + JWT** (`server.ts`)
   - `POST /api/auth/login` — autenticação
@@ -112,7 +112,7 @@ Calculadora interativa: ingredientes → custos → embalagem → mão de obra �
 - Configurar webhook no painel Kiwify apontando para `POST /api/webhook/kiwify`
 - Testar fluxo completo: compra → webhook → email → login
 - Validar remetente próprio `acesso@oatelier21.com.br` no Resend
-- Inserir prova social e FAQ na sales page
+- Inserir prova social real na sales page
 
 ---
 
@@ -215,8 +215,7 @@ Hoje o projeto usa a API HTTP do Resend sem SDK extra. Para ativar de verdade, b
 ## 9. Ideias Futuras
 
 - [ ] Vídeos próprios do Atelier 21
-- [ ] Depoimentos/prova social na sales page
-- [ ] FAQ na sales page
+- [ ] Refinar prova social real na sales page
 - [ ] Programa de afiliados Kiwify
 - [ ] Expandir para Dia das Mães, Natal, etc.
 - [ ] Receitas sazonais ao longo do ano
@@ -251,9 +250,9 @@ site/
         ├── SalesPage.tsx    # Página de vendas
         ├── LoginPage.tsx    # Login da área de membros
         ├── MemberArea.tsx   # Área de membros (sidebar + mobile nav)
-        ├── EasterGuide.tsx  # Módulo 1: 15 Receitas
+        ├── EasterGuide.tsx  # Módulo 1: Cardápio Validado
         ├── RecipeCard.tsx   # Card expandível de receita
         ├── PricingCalculator.tsx  # Módulo 2: Calculadora
-        ├── SalesStrategies.tsx    # Módulo 3: 20 Estratégias
+        ├── SalesStrategies.tsx    # Módulo 3: Execução Comercial VTSD
         └── StrategyCard.tsx       # Card expandível de estratégia
 ```

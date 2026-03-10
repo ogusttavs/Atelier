@@ -549,10 +549,10 @@ export default function EasterGuide() {
             Módulo 1
           </span>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-[#4A3338] mb-3 flex items-center gap-3">
-            <BookOpen className="text-[#D16075]" size={32} /> 15 Receitas Vencedoras
+            <BookOpen className="text-[#D16075]" size={32} /> Cardápio validado de Páscoa
           </h1>
           <p className="text-base sm:text-lg text-[#70545A]">
-            10 receitas clássicas testadas + 5 tendências virais do TikTok Páscoa 2026 — com vídeo, custo e lucro estimado em cada uma.
+            10 receitas classicas para dar base comercial + 5 queridinhos do TikTok para aumentar desejo visual. O foco aqui nao e encher o cardapio: e escolher poucas opcoes com mais clareza para vender nesta Pascoa.
           </p>
         </div>
 
@@ -564,19 +564,19 @@ export default function EasterGuide() {
           </div>
           <div className="bg-[#FFF5F7] p-4 rounded-xl text-center">
             <p className="text-2xl font-bold text-[#D16075] flex items-center justify-center gap-1">
-              <TrendingUp size={20} /> 7
+              <TrendingUp size={20} /> 10
             </p>
-            <p className="text-xs text-[#A8576A] font-medium">Tendências 2026</p>
+            <p className="text-xs text-[#A8576A] font-medium">Classicos de Base</p>
           </div>
           <div className="bg-green-50 p-4 rounded-xl text-center">
             <p className="text-2xl font-bold text-green-600">140-300%</p>
-            <p className="text-xs text-green-600 font-medium">Margem de Lucro</p>
+            <p className="text-xs text-green-600 font-medium">Margem Estimada</p>
           </div>
           <div className="bg-black p-4 rounded-xl text-center">
             <p className="text-2xl font-bold text-white flex items-center justify-center gap-1">
               <TikTokIcon size={20} /> 5
             </p>
-            <p className="text-xs text-gray-300 font-medium">Virais do TikTok</p>
+            <p className="text-xs text-gray-300 font-medium">Visuais de Desejo</p>
           </div>
         </div>
       </div>
@@ -586,8 +586,8 @@ export default function EasterGuide() {
         <h3 className="text-lg font-bold text-[#E295A3] mb-2">💡 Como usar este módulo</h3>
         <p className="text-sm text-gray-300 leading-relaxed">
           Clique em cada receita para ver vídeo tutorial, ingredientes, passo a passo e precificação.
-          <strong className="text-white"> Não tente fazer as 15 receitas.</strong> Escolha <strong className="text-[#E295A3]">3 a 5</strong> que façam sentido para o seu público.
-          Use os filtros para encontrar o que é mais adequado ao seu nível agora.
+          <strong className="text-white"> Nao tente fazer as 15 receitas.</strong> Comece com <strong className="text-[#E295A3]">2 classicos, 1 produto visual e 1 lembrancinha</strong>.
+          Depois passe tudo na calculadora antes de abrir as encomendas.
         </p>
       </div>
 
@@ -643,12 +643,11 @@ export default function EasterGuide() {
               <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
                 Queridinhos do TikTok
               </h2>
-              <p className="text-xs text-[#EE1D52] font-semibold uppercase tracking-wider">Tendências Páscoa 2026</p>
+              <p className="text-xs text-[#EE1D52] font-semibold uppercase tracking-wider">Desejo visual da campanha</p>
             </div>
           </div>
           <p className="text-sm text-gray-400 leading-relaxed">
-            Receitas que estão <strong className="text-white">viralizando agora</strong> no TikTok. Alta conversão pois os clientes já viram e querem comprar.
-            Produza antes dos concorrentes do seu bairro descobrirem.
+            Use esses produtos como <strong className="text-white">vitrine e atencao</strong>. Eles ajudam a gerar desejo e conversa, mas a base do cardapio continua nos classicos de maior seguranca comercial.
           </p>
         </div>
 
@@ -662,19 +661,19 @@ export default function EasterGuide() {
 
       {/* Bottom tip */}
       <div className="bg-gradient-to-r from-[#D16075] to-[#A8576A] text-white p-6 sm:p-8 rounded-2xl shadow-lg">
-        <h3 className="text-xl font-bold mb-3">🎯 Dica Final: Monte Seu Cardápio Assim</h3>
+        <h3 className="text-xl font-bold mb-3">🎯 Montagem recomendada para a primeira campanha</h3>
         <div className="grid sm:grid-cols-3 gap-4 text-sm">
           <div className="bg-white/10 p-4 rounded-xl">
-            <p className="font-bold mb-1">1 Carro-Chefe</p>
-            <p className="text-rose-100">Ovo de colher premium (Ninho, Pistache ou Brigadeiro Gourmet)</p>
+            <p className="font-bold mb-1">2 classicos de saida</p>
+            <p className="text-rose-100">Escolha receitas que te deem mais seguranca para vender e produzir sem improviso.</p>
           </div>
           <div className="bg-white/10 p-4 rounded-xl">
-            <p className="font-bold mb-1">1 do TikTok</p>
-            <p className="text-rose-100">Cenoura de chocolate, Bark ou Churros — quem oferece primeiro domina</p>
+            <p className="font-bold mb-1">1 produto visual</p>
+            <p className="text-rose-100">Use um queridinho do TikTok para chamar atencao, gerar desejo e movimentar os stories.</p>
           </div>
           <div className="bg-white/10 p-4 rounded-xl">
-            <p className="font-bold mb-1">2 Lembrancinhas</p>
-            <p className="text-rose-100">Cones trufados + Trufas gourmet — venda em volume, atraia novos clientes</p>
+            <p className="font-bold mb-1">1 a 2 itens de entrada</p>
+            <p className="text-rose-100">Cones, barras ou trufas ajudam a captar pedidos menores e ampliar o ticket com mais facilidade.</p>
           </div>
         </div>
       </div>

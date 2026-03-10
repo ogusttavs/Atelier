@@ -64,9 +64,11 @@ export default function PricingCalculator() {
           Módulo 2
         </span>
         <h1 className="text-2xl sm:text-4xl font-extrabold text-[#4A3338] mb-4 flex items-center gap-3">
-          <Calculator className="text-[#D16075]" size={32} /> Planilha de Precificação
+          <Calculator className="text-[#D16075]" size={32} /> Precificação sem chute
         </h1>
-        <p className="text-base sm:text-lg text-[#70545A]">Calcule exatamente quanto cobrar para nunca mais ter prejuízo.</p>
+        <p className="text-base sm:text-lg text-[#70545A]">
+          Use ingredientes, embalagem, sua hora e margem para chegar a um preço que pague seu trabalho e proteja o lucro nesta Páscoa.
+        </p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
@@ -76,7 +78,7 @@ export default function PricingCalculator() {
           {/* Ingredients */}
           <section>
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
-              <h2 className="text-xl font-bold text-[#4A3338]">1. Ingredientes</h2>
+              <h2 className="text-xl font-bold text-[#4A3338]">1. Ingredientes do produto</h2>
               <button 
                 onClick={addIngredient}
                 className="flex items-center justify-center gap-1 text-sm bg-[#FFF5F7] text-[#A8576A] px-4 py-2 rounded-lg hover:bg-[#E295A3]/20 transition-colors font-medium border border-[#E295A3]/30"
@@ -143,7 +145,7 @@ export default function PricingCalculator() {
           <div className="grid sm:grid-cols-2 gap-8">
             {/* Packaging & Labor */}
             <section className="space-y-4">
-              <h2 className="text-xl font-bold text-[#4A3338]">2. Embalagem & Mão de Obra</h2>
+              <h2 className="text-xl font-bold text-[#4A3338]">2. Embalagem e sua hora</h2>
               
               <div className="bg-gray-50 p-5 rounded-xl border border-gray-100 space-y-4">
                 <div>
@@ -184,7 +186,7 @@ export default function PricingCalculator() {
 
             {/* Margins */}
             <section className="space-y-4">
-              <h2 className="text-xl font-bold text-[#4A3338]">3. Margens</h2>
+              <h2 className="text-xl font-bold text-[#4A3338]">3. Custos fixos e lucro alvo</h2>
               
               <div className="bg-gray-50 p-5 rounded-xl border border-gray-100 space-y-4">
                 <div>
@@ -220,7 +222,10 @@ export default function PricingCalculator() {
         {/* Results Panel */}
         <div className="lg:col-span-1">
           <div className="bg-[#4A3338] text-white p-6 sm:p-8 rounded-3xl sticky top-8 shadow-2xl border border-[#D16075]/20">
-            <h2 className="text-xl font-bold mb-6 border-b border-[#5E4249] pb-4 text-[#E295A3]">Resumo do Produto</h2>
+            <h2 className="text-xl font-bold mb-3 text-[#E295A3]">Resumo da precificação</h2>
+            <p className="text-xs text-gray-300 leading-relaxed mb-6 border-b border-[#5E4249] pb-4">
+              Se voce cobra no chute, a venda pode ate sair, mas o lucro desaparece. Aqui o objetivo e precificar com mais seguranca.
+            </p>
             
             <div className="space-y-4 mb-8">
               <div className="flex justify-between text-sm">
@@ -242,19 +247,19 @@ export default function PricingCalculator() {
             </div>
 
             <div className="bg-[#5E4249] p-6 rounded-2xl mb-6 shadow-inner">
-              <p className="text-xs text-gray-300 mb-2 font-medium uppercase tracking-wider text-center">Preço de Venda Sugerido</p>
+              <p className="text-xs text-gray-300 mb-2 font-medium uppercase tracking-wider text-center">Preco sugerido para vender com seguranca</p>
               <p className="text-4xl font-extrabold text-center text-[#D16075]">
                 R$ {suggestedPrice.toFixed(2)}
               </p>
             </div>
 
             <div className="bg-green-900/40 border border-green-500/30 p-4 rounded-xl text-center">
-              <p className="text-xs text-green-200 mb-1">Seu Lucro Líquido por unidade:</p>
+              <p className="text-xs text-green-200 mb-1">Lucro liquido estimado por unidade:</p>
               <p className="text-2xl font-bold text-green-400">R$ {profitValue.toFixed(2)}</p>
             </div>
             
             <p className="text-[10px] text-gray-400 text-center mt-6 leading-relaxed">
-              *O preço sugerido já cobre todos os seus custos, paga sua hora de trabalho e garante a margem de lucro escolhida.
+              *O preco sugerido ja cobre custos, embalagem, sua hora e a margem escolhida para evitar vender muito e ganhar pouco.
             </p>
           </div>
         </div>
