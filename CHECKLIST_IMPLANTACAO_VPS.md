@@ -116,9 +116,9 @@ Status atual:
 
 ### Decisão a tomar
 
-- [ ] Verificar caminho do banco atual na VPS
-- [ ] Verificar se a tabela `users` já existe
-- [ ] Verificar schema atual da tabela `users`
+- [x] Verificar caminho do banco atual na VPS
+- [x] Verificar se a tabela `users` já existe
+- [x] Verificar schema atual da tabela `users`
 - [ ] Verificar se já existem compradoras cadastradas
 - [ ] Decidir se vamos:
   - [ ] reutilizar o banco existente
@@ -190,11 +190,11 @@ Motivo:
 
 ### Testes mínimos do backend
 
-- [ ] `POST /api/auth/login`
-- [ ] `POST /api/auth/verify`
+- [x] `POST /api/auth/login`
+- [x] `POST /api/auth/verify`
 - [ ] `POST /api/admin/create-user`
 - [ ] `GET /api/admin/users`
-- [ ] `POST /api/webhook/kiwify`
+- [x] `POST /api/webhook/kiwify`
 
 ---
 
@@ -262,6 +262,7 @@ Status:
 - na VPS os emails já foram configurados, então agora falta validar integração final
 - a VPS já tem outro projeto usando Resend com `EMAIL_PROVIDER=resend`, `EMAIL_FROM` e `RESEND_API_KEY`
 - o Atelier 21 agora aceita tanto `RESEND_FROM_EMAIL` quanto `EMAIL_FROM`
+- teste em produção confirmou que o Resend atual ainda não autoriza enviar como `oatelier21.com.br`
 
 - [x] Confirmar `RESEND_API_KEY`
 - [x] Confirmar `RESEND_FROM_EMAIL` ou `EMAIL_FROM`
@@ -271,15 +272,21 @@ Status:
 - [ ] Confirmar que o link do email abre `/login`
 - [ ] Confirmar que email e senha enviados funcionam no login
 
+Erro atual do remetente:
+
+```text
+Not authorized to send emails from oatelier21.com.br
+```
+
 ---
 
 ## 8. Teste ponta a ponta
 
 - [ ] Comprar pelo checkout real
-- [ ] Confirmar disparo do webhook
-- [ ] Confirmar criação da usuária no banco
+- [x] Confirmar disparo do webhook
+- [x] Confirmar criação da usuária no banco
 - [ ] Confirmar envio do email automático
-- [ ] Confirmar login com credenciais recebidas
+- [x] Confirmar login com credenciais recebidas
 - [ ] Confirmar acesso à área de membros
 - [ ] Confirmar logout
 - [ ] Confirmar novo login após logout
