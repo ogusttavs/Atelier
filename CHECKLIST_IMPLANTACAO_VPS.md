@@ -30,21 +30,21 @@ Conclusão operacional:
 - [x] Fallback demo mantido para desenvolvimento
 - [x] `npm run lint` passando
 - [x] `npm run build` passando
-- [ ] Definir domínio final do frontend
-- [ ] Definir domínio ou subdomínio do backend, se separado
+- [x] Definir domínio final do frontend
+- [x] Definir domínio ou subdomínio do backend, se separado
 
 ---
 
 ## 2. Variáveis de ambiente da produção
 
-- [ ] Configurar `VITE_KIWIFY_CHECKOUT_URL`
-- [ ] Configurar `JWT_SECRET`
-- [ ] Configurar `KIWIFY_WEBHOOK_TOKEN`
-- [ ] Configurar `FRONTEND_URL`
-- [ ] Configurar `APP_LOGIN_URL`
-- [ ] Configurar `RESEND_API_KEY`
-- [ ] Configurar `RESEND_FROM_EMAIL`
-- [ ] Configurar `ADMIN_SECRET`
+- [x] Configurar `VITE_KIWIFY_CHECKOUT_URL`
+- [x] Configurar `JWT_SECRET`
+- [x] Configurar `KIWIFY_WEBHOOK_TOKEN`
+- [x] Configurar `FRONTEND_URL`
+- [x] Configurar `APP_LOGIN_URL`
+- [x] Configurar `RESEND_API_KEY`
+- [x] Configurar `RESEND_FROM_EMAIL`
+- [x] Configurar `ADMIN_SECRET`
 
 Observação:
 
@@ -71,11 +71,11 @@ Exemplo:
 
 ### O que fazer no domínio
 
-- [ ] Escolher o domínio principal do Atelier 21
-- [ ] Criar registro `A` do domínio principal apontando para `167.88.32.1`
-- [ ] Criar registro `www` como `CNAME` para o domínio principal, se quiser usar `www`
-- [ ] Aguardar propagação do DNS
-- [ ] Confirmar que o domínio responde na VPS antes de emitir SSL
+- [x] Escolher o domínio principal do Atelier 21
+- [x] Criar registro `A` do domínio principal apontando para `167.88.32.1`
+- [x] Criar registro `www` como `CNAME` para o domínio principal, se quiser usar `www`
+- [x] Aguardar propagação do DNS
+- [x] Confirmar que o domínio responde na VPS antes de emitir SSL
 
 ### Exemplo de DNS
 
@@ -161,23 +161,23 @@ sqlite3 /caminho/para/atelier21.db "SELECT id, email, name, access_status, creat
 
 ### Se for necessário criar banco novo
 
-- [ ] Definir caminho final do banco
-- [ ] Configurar `DB_PATH` no `.env`
-- [ ] Subir o backend e deixar o `server.ts` criar a estrutura inicial
-- [ ] Confirmar criação da tabela `users`
+- [x] Definir caminho final do banco
+- [x] Configurar `DB_PATH` no `.env`
+- [x] Subir o backend e deixar o `server.ts` criar a estrutura inicial
+- [x] Confirmar criação da tabela `users`
 
 ---
 
 ## 4. Backend na VPS
 
-- [ ] Subir o código atualizado na VPS
-- [ ] Instalar dependências com `npm install`
-- [ ] Criar `.env` de produção
-- [ ] Confirmar `DB_PATH` correto
-- [ ] Definir porta interna do backend do Atelier 21
-- [ ] Rodar backend manualmente para teste inicial
-- [ ] Validar `GET /api/health`
-- [ ] Configurar backend para rodar com PM2 ou systemd
+- [x] Subir o código atualizado na VPS
+- [x] Instalar dependências com `npm install`
+- [x] Criar `.env` de produção
+- [x] Confirmar `DB_PATH` correto
+- [x] Definir porta interna do backend do Atelier 21
+- [x] Rodar backend manualmente para teste inicial
+- [x] Validar `GET /api/health`
+- [x] Configurar backend para rodar com PM2 ou systemd
 - [ ] Confirmar reinício automático após reboot
 
 Porta recomendada:
@@ -200,13 +200,13 @@ Motivo:
 
 ## 5. Frontend na VPS
 
-- [ ] Rodar `npm run build`
-- [ ] Publicar a pasta `dist`
-- [ ] Configurar Nginx para servir o frontend
-- [ ] Configurar proxy `/api` para `127.0.0.1:3010`
-- [ ] Configurar rewrite de SPA para `/login`
-- [ ] Configurar rewrite de SPA para `/member`
-- [ ] Garantir que assets estáticos carregam corretamente
+- [x] Rodar `npm run build`
+- [x] Publicar a pasta `dist`
+- [x] Configurar Nginx para servir o frontend
+- [x] Configurar proxy `/api` para `127.0.0.1:3010`
+- [x] Configurar rewrite de SPA para `/login`
+- [x] Configurar rewrite de SPA para `/member`
+- [x] Garantir que assets estáticos carregam corretamente
 
 ### Regra importante
 
@@ -239,8 +239,8 @@ server {
 
 ## 6. Integração com Kiwify
 
-- [ ] Confirmar URL final do checkout
-- [ ] Confirmar que a LP está usando `VITE_KIWIFY_CHECKOUT_URL`
+- [x] Confirmar URL final do checkout
+- [x] Confirmar que a LP está usando `VITE_KIWIFY_CHECKOUT_URL`
 - [ ] Configurar webhook no painel da Kiwify
 - [ ] Confirmar token do webhook igual ao `.env`
 - [ ] Testar recebimento de evento `paid`
@@ -263,9 +263,9 @@ Status:
 - a VPS já tem outro projeto usando Resend com `EMAIL_PROVIDER=resend`, `EMAIL_FROM` e `RESEND_API_KEY`
 - o Atelier 21 agora aceita tanto `RESEND_FROM_EMAIL` quanto `EMAIL_FROM`
 
-- [ ] Confirmar `RESEND_API_KEY`
-- [ ] Confirmar `RESEND_FROM_EMAIL` ou `EMAIL_FROM`
-- [ ] Confirmar `APP_LOGIN_URL`
+- [x] Confirmar `RESEND_API_KEY`
+- [x] Confirmar `RESEND_FROM_EMAIL` ou `EMAIL_FROM`
+- [x] Confirmar `APP_LOGIN_URL`
 - [ ] Testar criação de usuária com envio de email
 - [ ] Confirmar recebimento do email na caixa de entrada
 - [ ] Confirmar que o link do email abre `/login`
@@ -298,11 +298,11 @@ Status:
 
 ## 10. Decisão final sobre o banco da VPS
 
-Estado atual: **pendente de inspeção**
+Estado atual: **banco criado no caminho final e pronto para uso**
 
 Decisão final:
 
-- [ ] manter banco existente
+- [x] manter banco existente
 - [ ] substituir por banco novo
 - [ ] migrar banco existente
 
