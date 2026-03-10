@@ -63,7 +63,7 @@ Calculadora interativa: ingredientes → custos → embalagem → mão de obra �
 | Sistema | Modelo | Status |
 |---------|--------|--------|
 | Pagamento | Kiwify (link direto + webhook) | 🟨 Checkout configurado no frontend; falta validar webhook em produção |
-| Autenticação | Email + senha + token + SQLite | ✅ Backend criado (`server.ts`) — modo demo ativo como fallback no frontend |
+| Autenticação | Email + senha + token + SQLite | ✅ Backend criado (`server.ts`) com validação real via API + banco |
 | Área de membros | Layout responsivo próprio | ✅ Implementado |
 | Email pós-compra | Resend via API HTTP | 🟨 Estrutura pronta em `src/services/email.ts`; falta validar integração final na VPS |
 | Deploy | VPS + Nginx + PM2 + SSL | 🟨 Base online em `oatelier21.com.br`; falta homologação comercial completa |
@@ -83,7 +83,7 @@ Calculadora interativa: ingredientes → custos → embalagem → mão de obra �
 - Vídeos corrigidos: iframe quebrado substituído por links YouTube + TikTok que abrem em nova aba
 - Calculadora de precificação interativa (`PricingCalculator.tsx`)
 - 20 estratégias com passo a passo + PDF download (`SalesStrategies.tsx`, `StrategyCard.tsx`)
-- AuthContext com API real + fallback demo (`AuthContext.tsx`)
+- AuthContext com autenticação real via API (`AuthContext.tsx`)
 - **Backend Express + SQLite + JWT** (`server.ts`)
   - `POST /api/auth/login` — autenticação
   - `POST /api/auth/verify` — validação de token + validação de acesso ativo no banco
@@ -130,9 +130,7 @@ npx tsx src/server.ts   # http://localhost:3001
 # Login:   http://localhost:3000/login
 # Membros: http://localhost:3000/member
 
-# Login demo (funciona sem backend rodando)
-# Email: demo@atelier21.com
-# Senha: pascoa2026
+# O login depende do backend + banco ativos
 ```
 
 ---
@@ -211,7 +209,6 @@ Hoje o projeto usa a API HTTP do Resend sem SDK extra. Para ativar de verdade, b
 | YouTube search embed | Vídeos de terceiros por enquanto | 09/03 |
 | PDF via browser print | Sem biblioteca extra | 09/03 |
 | Preço R$ 49,90 | Faixa de impulso | Original |
-| Demo fallback no AuthContext | Frontend funciona mesmo sem backend rodando | 09/03 |
 
 ---
 
@@ -247,12 +244,12 @@ site/
     ├── server.ts            # ✅ Backend Express + SQLite + controle de acesso
     ├── vite-env.d.ts        # Tipagem das variáveis Vite
     ├── contexts/
-    │   └── AuthContext.tsx  # Auth com API real + fallback demo
+    │   └── AuthContext.tsx  # Auth com API real
     ├── services/
     │   └── email.ts         # Envio automático de email via Resend
     └── components/
         ├── SalesPage.tsx    # Página de vendas
-        ├── LoginPage.tsx    # Login com hint de credenciais demo
+        ├── LoginPage.tsx    # Login da área de membros
         ├── MemberArea.tsx   # Área de membros (sidebar + mobile nav)
         ├── EasterGuide.tsx  # Módulo 1: 15 Receitas
         ├── RecipeCard.tsx   # Card expandível de receita

@@ -1,23 +1,23 @@
-import { motion } from 'motion/react';
-import { ArrowRight, CheckCircle2, TrendingUp, Calculator, BookOpen, Clock, ShieldCheck, Heart, Star, Gift, Rabbit, LogIn } from 'lucide-react';
+import { ArrowRight, CheckCircle2, TrendingUp, Calculator, BookOpen, Clock, ShieldCheck, Star, Gift, Rabbit, LogIn } from 'lucide-react';
 
 interface SalesPageProps {
   onBuy: () => void;
   onAccessMember?: () => void;
+  onPreloadLogin?: () => void;
 }
 
-export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
+const HERO_IMAGE =
+  'https://images.unsplash.com/photo-1587241321921-91a834d6d191?q=70&w=1200&auto=format&fit=crop';
+const OFFER_IMAGE =
+  'https://images.unsplash.com/photo-1522273400909-fd1a8f77637e?q=70&w=1280&auto=format&fit=crop';
+
+export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: SalesPageProps) {
   return (
     <div className="w-full">
       {/* Hero Section */}
       <section className="relative pt-16 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
-          >
+          <div className="text-center lg:text-left reveal-up">
             <span className="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-[#E295A3]/20 text-[#A8576A] font-semibold text-sm mb-6 uppercase tracking-wider">
               <Rabbit size={16} className="text-[#D16075]" /> Atelier 21 • Operação Páscoa Lucrativa
             </span>
@@ -48,26 +48,29 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
               {onAccessMember && (
                 <button
                   onClick={onAccessMember}
+                  onMouseEnter={onPreloadLogin}
+                  onFocus={onPreloadLogin}
                   className="w-full sm:w-auto px-8 py-4 border-2 border-[#D16075]/25 bg-white/80 hover:bg-white text-[#A8576A] rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2"
                 >
                   Entrar <LogIn size={20} />
                 </button>
               )}
             </div>
-          </motion.div>
+          </div>
 
           {/* Hero Image */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative hidden sm:block"
-          >
+          <div className="relative hidden sm:block reveal-up" style={{animationDelay: '120ms'}}>
             <div className="absolute inset-0 bg-gradient-to-tr from-[#E295A3]/40 to-transparent rounded-full blur-3xl -z-10 transform scale-110"></div>
             <img
-              src="https://images.unsplash.com/photo-1587241321921-91a834d6d191?q=80&w=2070&auto=format&fit=crop"
+              src={HERO_IMAGE}
               alt="Ovos de Páscoa Artesanais"
               className="rounded-3xl shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition-transform duration-500"
+              width="1200"
+              height="1500"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
+              sizes="(min-width: 1024px) 42rem, 100vw"
               referrerPolicy="no-referrer"
             />
             {/* Floating Badge */}
@@ -80,12 +83,12 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
                 <p className="text-sm font-bold text-[#4A3338]">A época mais lucrativa do ano</p>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Target Audience Section */}
-      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-y border-[#E295A3]/20">
+      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-y border-[#E295A3]/20 deferred-section">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-12">Para quem é a Operação Páscoa Lucrativa?</h2>
 
@@ -116,7 +119,7 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
       </section>
 
       {/* About Atelier 21 */}
-      <section className="bg-[#FFF5F7] py-16 px-4 sm:px-6 lg:px-8">
+      <section className="bg-[#FFF5F7] py-16 px-4 sm:px-6 lg:px-8 deferred-section">
         <div className="max-w-4xl mx-auto bg-gradient-to-br from-white to-[#FFF5F7] rounded-3xl p-8 sm:p-12 border border-[#E295A3]/30 text-center shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#D16075] rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#E295A3] rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
@@ -135,7 +138,7 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
       </section>
 
       {/* The Problem Section */}
-      <section className="bg-[#4A3338] text-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="bg-[#4A3338] text-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden deferred-section">
         {/* Decorative background elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D16075] rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#E295A3] rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
@@ -172,7 +175,7 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
       </section>
 
       {/* The Solution / Deliverables */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto deferred-section">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-4">O que você vai receber na Operação Páscoa Lucrativa</h2>
           <p className="text-lg text-[#70545A]">Tudo mastigado e pronto para aplicar. Sem enrolação.</p>
@@ -180,10 +183,7 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
 
         <div className="grid md:grid-cols-3 gap-8">
           {/* Deliverable 1 */}
-          <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-white p-8 rounded-3xl shadow-xl shadow-[#4A3338]/5 border border-[#E295A3]/30"
-          >
+          <div className="bg-white p-8 rounded-3xl shadow-xl shadow-[#4A3338]/5 border border-[#E295A3]/30 transition-transform duration-200 hover:-translate-y-1">
             <div className="w-14 h-14 bg-[#FFF5F7] rounded-2xl flex items-center justify-center mb-6 text-[#D16075]">
               <BookOpen size={28} />
             </div>
@@ -194,13 +194,10 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
               <li className="flex items-start gap-2 text-sm text-[#4A3338]"><CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" /> Lembrancinhas baratas que vendem em volume</li>
               <li className="flex items-start gap-2 text-sm text-[#4A3338]"><CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" /> Como montar um cardápio irresistível</li>
             </ul>
-          </motion.div>
+          </div>
 
           {/* Deliverable 2 */}
-          <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-white p-8 rounded-3xl shadow-xl shadow-[#4A3338]/5 border border-[#D16075] relative overflow-hidden"
-          >
+          <div className="bg-white p-8 rounded-3xl shadow-xl shadow-[#4A3338]/5 border border-[#D16075] relative overflow-hidden transition-transform duration-200 hover:-translate-y-1">
             <div className="absolute top-0 right-0 bg-[#D16075] text-white text-xs font-bold px-3 py-1 rounded-bl-lg">O SEGREDO DO LUCRO</div>
             <div className="w-14 h-14 bg-[#FFF5F7] rounded-2xl flex items-center justify-center mb-6 text-[#D16075]">
               <Calculator size={28} />
@@ -212,13 +209,10 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
               <li className="flex items-start gap-2 text-sm text-[#4A3338]"><CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" /> Calcula custo de embalagem e sua hora</li>
               <li className="flex items-start gap-2 text-sm text-[#4A3338]"><CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" /> Mostra o lucro líquido real no seu bolso</li>
             </ul>
-          </motion.div>
+          </div>
 
           {/* Deliverable 3 */}
-          <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-white p-8 rounded-3xl shadow-xl shadow-[#4A3338]/5 border border-[#E295A3]/30"
-          >
+          <div className="bg-white p-8 rounded-3xl shadow-xl shadow-[#4A3338]/5 border border-[#E295A3]/30 transition-transform duration-200 hover:-translate-y-1">
             <div className="w-14 h-14 bg-[#FFF5F7] rounded-2xl flex items-center justify-center mb-6 text-[#D16075]">
               <TrendingUp size={28} />
             </div>
@@ -229,20 +223,25 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
               <li className="flex items-start gap-2 text-sm text-[#4A3338]"><CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" /> 10 Estratégias Gerais (Para o ano todo)</li>
               <li className="flex items-start gap-2 text-sm text-[#4A3338]"><CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" /> Táticas para vender no seu bairro</li>
             </ul>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Offer / Pricing */}
-      <section className="bg-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E295A3]/30">
+      <section className="bg-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E295A3]/30 deferred-section">
         <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-[#D16075]/20 relative">
 
           {/* Decorative Image inside Offer */}
           <div className="h-48 w-full overflow-hidden relative">
             <img
-              src="https://images.unsplash.com/photo-1522273400909-fd1a8f77637e?q=80&w=2012&auto=format&fit=crop"
+              src={OFFER_IMAGE}
               alt="Coelhinhos e Doces de Páscoa"
               className="w-full h-full object-cover"
+              width="1280"
+              height="720"
+              loading="lazy"
+              decoding="async"
+              sizes="(min-width: 1024px) 48rem, 100vw"
               referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent"></div>
@@ -278,6 +277,8 @@ export default function SalesPage({ onBuy, onAccessMember }: SalesPageProps) {
           <div className="max-w-3xl mx-auto text-center">
             <button
               onClick={onAccessMember}
+              onMouseEnter={onPreloadLogin}
+              onFocus={onPreloadLogin}
               className="inline-flex items-center gap-2 text-[#E295A3] hover:text-white font-semibold transition-colors text-sm"
             >
               <LogIn size={18} /> Já é aluno(a)? Acesse a Área de Membros

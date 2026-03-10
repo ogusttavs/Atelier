@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {createContext, useContext, useEffect, useState, type ReactNode} from 'react';
 
 interface User {
     email: string;
@@ -21,10 +21,18 @@ export function useAuth() {
     return context;
 }
 
-// ─── Modo demo (ativo enquanto o backend não estiver rodando) ─────────────────
-const DEMO_USERS = [
-    { email: 'demo@atelier21.com', password: 'pascoa2026', name: 'Cliente Demo' },
-];
+const API_TIMEOUT_MS = 3000;
+
+function getSavedSession() {
+    if (typeof window === 'undefined') {
+        return { savedToken: null, savedUser: null };
+    }
+
+    return {
+        savedToken: localStorage.getItem('atelier21_token'),
+        savedUser: localStorage.getItem('atelier21_user'),
+    };
+}
 
 async function tryApiLogin(email: string, password: string): Promise<{ token: string; user: User } | null> {
     try {
@@ -32,7 +40,7 @@ async function tryApiLogin(email: string, password: string): Promise<{ token: st
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
-            signal: AbortSignal.timeout(4000),
+            signal: AbortSignal.timeout(API_TIMEOUT_MS),
         });
 
         if (!res.ok) return null;
@@ -48,7 +56,7 @@ async function tryApiVerify(token: string): Promise<User | null> {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token }),
-            signal: AbortSignal.timeout(4000),
+            signal: AbortSignal.timeout(API_TIMEOUT_MS),
         });
 
         if (!res.ok) return null;
@@ -62,28 +70,28 @@ async function tryApiVerify(token: string): Promise<User | null> {
 // ─── Provider ─────────────────────────────────────────────────────────────────
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(() => {
+        const { savedToken, savedUser } = getSavedSession();
+        return Boolean(savedToken && savedUser);
+    });
 
     useEffect(() => {
         const restore = async () => {
-            const savedToken = localStorage.getItem('atelier21_token');
-            const savedUser = localStorage.getItem('atelier21_user');
+            const { savedToken, savedUser } = getSavedSession();
 
-            if (savedToken && savedUser) {
-                // Tenta validar o token no backend
-                const verified = await tryApiVerify(savedToken);
+            if (!savedToken || !savedUser) {
+                setIsLoading(false);
+                return;
+            }
 
-                if (verified) {
-                    setUser(verified);
-                } else {
-                    // Token inválido ou backend offline → tenta usar sessão salva localmente
-                    try {
-                        setUser(JSON.parse(savedUser) as User);
-                    } catch {
-                        localStorage.removeItem('atelier21_user');
-                        localStorage.removeItem('atelier21_token');
-                    }
-                }
+            // Tenta validar o token no backend
+            const verified = await tryApiVerify(savedToken);
+
+            if (verified) {
+                setUser(verified);
+            } else {
+                localStorage.removeItem('atelier21_user');
+                localStorage.removeItem('atelier21_token');
             }
 
             setIsLoading(false);
@@ -101,17 +109,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             localStorage.setItem('atelier21_token', apiResult.token);
             localStorage.setItem('atelier21_user', JSON.stringify(apiResult.user));
             setUser(apiResult.user);
-            return true;
-        }
-
-        // 2. Fallback: modo demo (útil durante desenvolvimento)
-        const demo = DEMO_USERS.find(u => u.email === emailNorm && u.password === password);
-        if (demo) {
-            const userData: User = { email: demo.email, name: demo.name };
-            const fakeToken = btoa(JSON.stringify({ email: demo.email, exp: Date.now() + 86400000 }));
-            localStorage.setItem('atelier21_token', fakeToken);
-            localStorage.setItem('atelier21_user', JSON.stringify(userData));
-            setUser(userData);
             return true;
         }
 

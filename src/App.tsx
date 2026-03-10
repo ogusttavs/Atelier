@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import {Suspense, startTransition, useEffect, useState} from 'react';
+import {AuthProvider, useAuth} from './contexts/AuthContext';
 import SalesPage from './components/SalesPage';
-import LoginPage from './components/LoginPage';
-import MemberArea from './components/MemberArea';
+import {lazyWithPreload} from './utils/lazyWithPreload';
 
 const KIWIFY_CHECKOUT_URL = import.meta.env.VITE_KIWIFY_CHECKOUT_URL || 'https://pay.kiwify.com.br/avY1khc';
+const LoginPage = lazyWithPreload(() => import('./components/LoginPage'));
+const MemberArea = lazyWithPreload(() => import('./components/MemberArea'));
 
 type View = 'sales' | 'login' | 'member';
 
@@ -27,13 +28,23 @@ function getPathForView(view: View): string {
   return '/';
 }
 
+function PageLoader() {
+  return (
+    <div className="min-h-screen bg-[#FFF5F7] flex items-center justify-center">
+      <div className="w-8 h-8 border-3 border-[#D16075]/30 border-t-[#D16075] rounded-full animate-spin" />
+    </div>
+  );
+}
+
 function AppContent() {
-  const { isAuthenticated, isLoading, logout } = useAuth();
+  const {isAuthenticated, isLoading, logout} = useAuth();
   const [view, setView] = useState<View>(() => getViewFromPath(window.location.pathname));
 
   const navigateTo = (nextView: View, replace = false) => {
     const nextPath = getPathForView(nextView);
-    setView(nextView);
+    startTransition(() => {
+      setView(nextView);
+    });
 
     if (normalizePath(window.location.pathname) === nextPath) return;
 
@@ -46,12 +57,35 @@ function AppContent() {
 
   useEffect(() => {
     const handlePopState = () => {
-      setView(getViewFromPath(window.location.pathname));
+      startTransition(() => {
+        setView(getViewFromPath(window.location.pathname));
+      });
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  useEffect(() => {
+    const preloadSecondaryRoutes = () => {
+      LoginPage.preload();
+
+      if (isAuthenticated) {
+        MemberArea.preload();
+      }
+    };
+
+    const requestIdle = window.requestIdleCallback?.bind(window);
+    const cancelIdle = window.cancelIdleCallback?.bind(window);
+
+    if (requestIdle && cancelIdle) {
+      const idleId = requestIdle(preloadSecondaryRoutes, {timeout: 1200});
+      return () => cancelIdle(idleId);
+    }
+
+    const timeoutId = window.setTimeout(preloadSecondaryRoutes, 600);
+    return () => window.clearTimeout(timeoutId);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -64,7 +98,9 @@ function AppContent() {
           ? 'member'
           : requestedView;
 
-    setView(resolvedView);
+    startTransition(() => {
+      setView(resolvedView);
+    });
 
     const resolvedPath = getPathForView(resolvedView);
     if (normalizePath(window.location.pathname) !== resolvedPath) {
@@ -73,6 +109,9 @@ function AppContent() {
   }, [isAuthenticated, isLoading]);
 
   const goToLogin = () => navigateTo('login');
+  const preloadLogin = () => {
+    LoginPage.preload();
+  };
 
   const handleBuy = () => {
     if (KIWIFY_CHECKOUT_URL.startsWith('http')) {
@@ -87,12 +126,8 @@ function AppContent() {
     navigateTo('sales', true);
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#FFF5F7] flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-[#D16075]/30 border-t-[#D16075] rounded-full animate-spin" />
-      </div>
-    );
+  if (isLoading && view !== 'sales') {
+    return <PageLoader />;
   }
 
   return (
@@ -101,24 +136,31 @@ function AppContent() {
         <SalesPage
           onBuy={handleBuy}
           onAccessMember={goToLogin}
+          onPreloadLogin={preloadLogin}
         />
       )}
       {view === 'login' && (
-        <LoginPage
-          onSuccess={() => navigateTo('member', true)}
-          onGoToSales={() => navigateTo('sales')}
-          checkoutUrl={KIWIFY_CHECKOUT_URL}
-        />
-      )}
-      {view === 'member' && (
-        isAuthenticated ? (
-          <MemberArea onLogout={handleLogout} />
-        ) : (
+        <Suspense fallback={<PageLoader />}>
           <LoginPage
             onSuccess={() => navigateTo('member', true)}
             onGoToSales={() => navigateTo('sales')}
             checkoutUrl={KIWIFY_CHECKOUT_URL}
           />
+        </Suspense>
+      )}
+      {view === 'member' && (
+        isAuthenticated ? (
+          <Suspense fallback={<PageLoader />}>
+            <MemberArea onLogout={handleLogout} />
+          </Suspense>
+        ) : (
+          <Suspense fallback={<PageLoader />}>
+            <LoginPage
+              onSuccess={() => navigateTo('member', true)}
+              onGoToSales={() => navigateTo('sales')}
+              checkoutUrl={KIWIFY_CHECKOUT_URL}
+            />
+          </Suspense>
         )
       )}
     </div>

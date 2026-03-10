@@ -1,16 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { TrendingUp, Gift, Store, Smartphone, Users, Megaphone, Calendar, ShoppingBag, Coffee, HeartHandshake, MapPin, Package, Clock, Star, Zap, MessageCircle, Camera, Award, Truck, Briefcase, Download } from 'lucide-react';
 import StrategyCard, { Strategy } from './StrategyCard';
 
-export default function SalesStrategies() {
-    const [activeTab, setActiveTab] = useState<'easter' | 'bonus'>('easter');
-    const contentRef = useRef<HTMLDivElement>(null);
-
-    const handleDownloadPdf = () => {
-        window.print();
-    };
-
-    const easterStrategies: Strategy[] = [
+const easterStrategies: Strategy[] = [
         {
             icon: <Gift />,
             title: "1. Degustação Estratégica (Fevereiro/Março)",
@@ -143,7 +135,7 @@ export default function SalesStrategies() {
         },
     ];
 
-    const bonusStrategies: Strategy[] = [
+const bonusStrategies: Strategy[] = [
         {
             icon: <Calendar />,
             title: "1. Assinatura Mensal (Clube do Doce)",
@@ -276,8 +268,15 @@ export default function SalesStrategies() {
         },
     ];
 
+export default function SalesStrategies() {
+    const [activeTab, setActiveTab] = useState<'easter' | 'bonus'>('easter');
+
+    const handleDownloadPdf = () => {
+        window.print();
+    };
+
     return (
-        <div ref={contentRef} className="space-y-6" id="strategies-content">
+        <div className="space-y-6" id="strategies-content">
             {/* Header */}
             <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-10 border border-[#E295A3]/20">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 border-b border-[#E295A3]/20 pb-6 mb-6">

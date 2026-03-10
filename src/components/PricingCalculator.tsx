@@ -9,11 +9,13 @@ interface Ingredient {
   quantityUsed: number;
 }
 
+const INITIAL_INGREDIENTS: Ingredient[] = [
+  { id: '1', name: 'Leite Condensado', cost: 6.50, quantityBought: 395, quantityUsed: 395 },
+  { id: '2', name: 'Chocolate Nobre', cost: 45.00, quantityBought: 1000, quantityUsed: 250 },
+];
+
 export default function PricingCalculator() {
-  const [ingredients, setIngredients] = useState<Ingredient[]>([
-    { id: '1', name: 'Leite Condensado', cost: 6.50, quantityBought: 395, quantityUsed: 395 },
-    { id: '2', name: 'Chocolate Nobre', cost: 45.00, quantityBought: 1000, quantityUsed: 250 },
-  ]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>(INITIAL_INGREDIENTS);
   const [packagingCost, setPackagingCost] = useState(5.00);
   const [laborHours, setLaborHours] = useState(1);
   const [hourlyRate, setHourlyRate] = useState(15.00);

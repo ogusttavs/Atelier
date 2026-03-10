@@ -219,7 +219,7 @@ app.post('/api/webhook/kiwify', async (req, res) => {
     db.prepare('INSERT INTO users (email, name, password_hash, kiwify_order_id, access_status) VALUES (?, ?, ?, ?, ?)')
         .run(email, name, passwordHash, orderId || null, 'active');
 
-    console.log(`✅ Nova aluna: ${email} | Senha gerada: ${password}`);
+    console.log(`✅ Nova aluna criada: ${email}`);
 
     let emailStatus: { sent: boolean; error?: string } = { sent: false, error: 'Envio não executado.' };
     try {
@@ -266,7 +266,7 @@ app.post('/api/admin/create-user', (req, res) => {
         db.prepare('INSERT INTO users (email, name, password_hash) VALUES (?, ?, ?)')
             .run(email.toLowerCase().trim(), finalName, hashPassword(finalPassword));
 
-        console.log(`✅ Usuário criado manualmente: ${email} | Senha: ${finalPassword}`);
+        console.log(`✅ Usuário criado manualmente: ${email}`);
         return res.json({ ok: true, email, password: finalPassword, name: finalName });
     } catch (err: unknown) {
         if ((err as NodeJS.ErrnoException).message?.includes('UNIQUE')) {

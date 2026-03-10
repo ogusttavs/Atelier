@@ -1,7 +1,6 @@
-import { useState, FormEvent } from 'react';
-import { motion } from 'motion/react';
-import { Heart, Mail, Lock, ArrowRight, ExternalLink, Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import {useState, type FormEvent} from 'react';
+import {ArrowRight, ExternalLink, Eye, EyeOff, Heart, Lock, Mail} from 'lucide-react';
+import {useAuth} from '../contexts/AuthContext';
 
 interface LoginPageProps {
     onSuccess: () => void;
@@ -39,12 +38,7 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
 
     return (
         <div className="min-h-screen bg-[#FFF5F7] flex items-center justify-center px-4 py-12">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="w-full max-w-md"
-            >
+            <div className="w-full max-w-md reveal-up">
                 {/* Logo */}
                 <div className="text-center mb-8">
                     <div className="w-16 h-16 bg-[#D16075] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#D16075]/20">
@@ -74,6 +68,8 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                                     placeholder="seu@email.com"
                                     className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#D16075] focus:border-transparent outline-none bg-[#FFF5F7]/50"
                                     autoComplete="email"
+                                    autoCapitalize="none"
+                                    inputMode="email"
                                 />
                             </div>
                         </div>
@@ -95,6 +91,7 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A8576A] hover:text-[#D16075]"
+                                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
@@ -103,13 +100,9 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
 
                         {/* Error */}
                         {error && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl border border-red-100"
-                            >
+                            <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl border border-red-100 fade-in">
                                 {error}
-                            </motion.div>
+                            </div>
                         )}
 
                         {/* Submit */}
@@ -126,12 +119,6 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                         </button>
                     </form>
 
-                    {/* Demo credentials hint */}
-                    <div className="mt-4 bg-[#FFF5F7] p-3 rounded-xl border border-[#E295A3]/20">
-                        <p className="text-xs text-[#A8576A] text-center">
-                            🧪 <strong>Modo Demo:</strong> demo@atelier21.com / pascoa2026
-                        </p>
-                    </div>
                 </div>
 
                 {/* Bottom links */}
@@ -153,7 +140,7 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                         </button>
                     </div>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

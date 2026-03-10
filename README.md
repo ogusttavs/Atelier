@@ -97,12 +97,11 @@ O projeto aceita tanto `RESEND_FROM_EMAIL` quanto `EMAIL_FROM`, para reaproveita
 
 Se `RESEND_API_KEY` ou `RESEND_FROM_EMAIL`/`EMAIL_FROM` não estiverem configurados, o acesso é criado mesmo assim e o backend registra um aviso no log.
 
-## Fallback demo
+## Autenticação
 
-O fallback demo continua ativo em `src/contexts/AuthContext.tsx` para desenvolvimento local:
+O login depende da API real em `src/server.ts` e da tabela `users` no SQLite.
 
-- `demo@atelier21.com`
-- `pascoa2026`
+Sem backend ativo, o acesso não é liberado.
 
 ## Comandos de validação
 

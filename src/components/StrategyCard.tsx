@@ -1,6 +1,5 @@
-import { useState, ReactNode } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown } from 'lucide-react';
+import {useState, type ReactNode} from 'react';
+import {ChevronDown} from 'lucide-react';
 
 export interface Strategy {
     icon: ReactNode;
@@ -31,13 +30,10 @@ export default function StrategyCard({ strategy, index, variant }: StrategyCardP
         : 'bg-[#A8576A] text-white';
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.03 }}
-            className={`rounded-2xl border transition-all overflow-hidden ${bgClass} ${isExpanded ? 'shadow-lg' : 'hover:shadow-md hover:-translate-y-0.5'}`}
+        <div
+            className={`rounded-2xl border transition-all overflow-hidden ${bgClass} ${isExpanded ? 'shadow-lg' : 'hover:shadow-md hover:-translate-y-0.5'} reveal-up`}
+            style={{ animationDelay: `${index * 30}ms` }}
         >
-            {/* Card Header - always visible */}
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="w-full text-left p-5 sm:p-6 flex items-start gap-4"
@@ -60,36 +56,27 @@ export default function StrategyCard({ strategy, index, variant }: StrategyCardP
                 />
             </button>
 
-            {/* Expanded: Step-by-step */}
-            <AnimatePresence>
-                {isExpanded && (
-                    <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
-                    >
-                        <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
-                            <div className="border-t border-[#E295A3]/20 pt-4">
-                                <h4 className="text-sm font-bold text-[#4A3338] mb-4 flex items-center gap-2">
-                                    📋 Como Executar — Passo a Passo
-                                </h4>
-                                <div className="space-y-3">
-                                    {strategy.steps.map((step, i) => (
-                                        <div key={i} className="flex items-start gap-3">
-                                            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${stepColor}`}>
-                                                {i + 1}
-                                            </span>
-                                            <p className="text-sm text-[#4A3338] leading-relaxed pt-0.5">{step}</p>
-                                        </div>
-                                    ))}
-                                </div>
+            {isExpanded && (
+                <div className="overflow-hidden fade-in">
+                    <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
+                        <div className="border-t border-[#E295A3]/20 pt-4">
+                            <h4 className="text-sm font-bold text-[#4A3338] mb-4 flex items-center gap-2">
+                                📋 Como Executar — Passo a Passo
+                            </h4>
+                            <div className="space-y-3">
+                                {strategy.steps.map((step, i) => (
+                                    <div key={i} className="flex items-start gap-3">
+                                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${stepColor}`}>
+                                            {i + 1}
+                                        </span>
+                                        <p className="text-sm text-[#4A3338] leading-relaxed pt-0.5">{step}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </motion.div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }

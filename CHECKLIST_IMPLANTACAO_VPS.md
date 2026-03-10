@@ -241,10 +241,10 @@ server {
 
 - [x] Confirmar URL final do checkout
 - [x] Confirmar que a LP está usando `VITE_KIWIFY_CHECKOUT_URL`
-- [ ] Configurar webhook no painel da Kiwify
+- [x] Configurar webhook no painel da Kiwify
 - [ ] Confirmar token do webhook igual ao `.env`
-- [ ] Testar recebimento de evento `paid`
-- [ ] Confirmar criação ou reativação da usuária no banco
+- [x] Testar recebimento de evento `paid`
+- [x] Confirmar criação ou reativação da usuária no banco
 
 Webhook esperado:
 
@@ -259,24 +259,57 @@ POST https://oatelier21.com.br/api/webhook/kiwify
 Status:
 
 - o código já está pronto em `src/services/email.ts`
-- na VPS os emails já foram configurados, então agora falta validar integração final
+- na VPS os emails já foram configurados
 - a VPS já tem outro projeto usando Resend com `EMAIL_PROVIDER=resend`, `EMAIL_FROM` e `RESEND_API_KEY`
 - o Atelier 21 agora aceita tanto `RESEND_FROM_EMAIL` quanto `EMAIL_FROM`
-- teste em produção confirmou que o Resend atual ainda não autoriza enviar como `oatelier21.com.br`
+- o domínio `oatelier21.com.br` já foi verificado na Resend
+- a `RESEND_API_KEY` da VPS já foi trocada para uma chave válida do Atelier 21
+- teste em produção confirmou envio aceito pela Resend com `email_sent: true`
+- o webhook segue criando usuária normalmente no banco com `access_status = active`
+- a rota pública `https://oatelier21.com.br/login` responde `200 OK`
+- as credenciais geradas no webhook já foram testadas com sucesso no login e no `verify`
 
 - [x] Confirmar `RESEND_API_KEY`
 - [x] Confirmar `RESEND_FROM_EMAIL` ou `EMAIL_FROM`
 - [x] Confirmar `APP_LOGIN_URL`
-- [ ] Testar criação de usuária com envio de email
+- [x] Verificar domínio `oatelier21.com.br` na Resend
+- [x] Testar criação de usuária com envio de email
+- [x] Atualizar a `RESEND_API_KEY` da VPS
+- [x] Reiniciar `atelier21-api`
+- [x] Confirmar envio aceito pela Resend
 - [ ] Confirmar recebimento do email na caixa de entrada
-- [ ] Confirmar que o link do email abre `/login`
-- [ ] Confirmar que email e senha enviados funcionam no login
+- [x] Confirmar que o link do email abre `/login`
+- [x] Confirmar que email e senha enviados funcionam no login
 
-Erro atual do remetente:
+Resultado atual da integração:
 
 ```text
-Not authorized to send emails from oatelier21.com.br
+Webhook em produção retornou: {"ok":true,"email_sent":true,"message":"Usuário criado com sucesso."}
 ```
+
+Próximos passos:
+
+- conferir o email real na caixa de entrada
+- confirmar se o email foi para inbox principal, promoções ou spam
+
+O que publicar no DNS do domínio:
+
+- `MX` em `send` apontando para o host que a Resend mostrar no painel
+- `TXT` em `send` com o SPF que a Resend mostrar no painel
+- `CNAME` de DKIM no host `*_domainkey` que a Resend gerar
+- `CNAME` de DKIM no segundo host `*_domainkey` que a Resend gerar
+- `CNAME` de DKIM no terceiro host `*_domainkey` que a Resend gerar
+
+Checklist prático para publicar:
+
+- [ ] Entrar em `Domains` no painel da Resend
+- [ ] Adicionar `oatelier21.com.br`
+- [ ] Copiar os 5 registros gerados pela Resend
+- [ ] Publicar os 5 registros no DNS do domínio
+- [ ] Garantir que os valores de `MX` e `CNAME` terminem com ponto final se o painel DNS exigir
+- [ ] Clicar em `Verify DNS Records` no painel da Resend
+- [ ] Aguardar status `verified`
+- [ ] Repetir o teste de webhook para validar envio real
 
 ---
 
