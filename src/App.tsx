@@ -6,8 +6,9 @@ import {lazyWithPreload} from './utils/lazyWithPreload';
 const KIWIFY_CHECKOUT_URL = import.meta.env.VITE_KIWIFY_CHECKOUT_URL || 'https://pay.kiwify.com.br/avY1khc';
 const LoginPage = lazyWithPreload(() => import('./components/LoginPage'));
 const MemberArea = lazyWithPreload(() => import('./components/MemberArea'));
+const ThankYouPage = lazyWithPreload(() => import('./components/ThankYouPage'));
 
-type View = 'sales' | 'login' | 'member';
+type View = 'member' | 'sales' | 'thankyou' | 'login';
 
 function normalizePath(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, '');
@@ -18,6 +19,7 @@ function getViewFromPath(pathname: string): View {
   const normalized = normalizePath(pathname);
 
   if (normalized === '/login') return 'login';
+  if (normalized === '/obrigado' || normalized === '/thank-you' || normalized === '/obrigado-operacao-pascoa') return 'thankyou';
   if (normalized === '/member' || normalized === '/members' || normalized === '/area-de-membros') return 'member';
   return 'sales';
 }
@@ -25,6 +27,7 @@ function getViewFromPath(pathname: string): View {
 function getPathForView(view: View): string {
   if (view === 'login') return '/login';
   if (view === 'member') return '/member';
+  if (view === 'thankyou') return '/obrigado';
   return '/';
 }
 
@@ -69,6 +72,7 @@ function AppContent() {
   useEffect(() => {
     const preloadSecondaryRoutes = () => {
       LoginPage.preload();
+      ThankYouPage.preload();
 
       if (isAuthenticated) {
         MemberArea.preload();
@@ -126,7 +130,7 @@ function AppContent() {
     navigateTo('sales', true);
   };
 
-  if (isLoading && view !== 'sales') {
+  if (isLoading && view !== 'sales' && view !== 'thankyou') {
     return <PageLoader />;
   }
 
@@ -138,6 +142,14 @@ function AppContent() {
           onAccessMember={goToLogin}
           onPreloadLogin={preloadLogin}
         />
+      )}
+      {view === 'thankyou' && (
+        <Suspense fallback={<PageLoader />}>
+          <ThankYouPage
+            onGoToLogin={goToLogin}
+            onGoToSales={() => navigateTo('sales')}
+          />
+        </Suspense>
       )}
       {view === 'login' && (
         <Suspense fallback={<PageLoader />}>

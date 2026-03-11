@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
   BookOpen,
@@ -19,8 +20,8 @@ interface SalesPageProps {
   onPreloadLogin?: () => void;
 }
 
-const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1587241321921-91a834d6d191?q=70&w=1200&auto=format&fit=crop';
+const HERO_IMAGE = '/images/hero-pascoa.jpeg';
+const MOBILE_HERO_IMAGE = '/images/hero-pascoa.jpeg';
 const OFFER_IMAGE =
   'https://images.unsplash.com/photo-1522273400909-fd1a8f77637e?q=70&w=1280&auto=format&fit=crop';
 
@@ -148,24 +149,96 @@ const FAQ_ITEMS = [
 }>;
 
 export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: SalesPageProps) {
+  const firstCheckoutRef = useRef<HTMLButtonElement | null>(null);
+  const [showStickyCheckout, setShowStickyCheckout] = useState(false);
+
+  useEffect(() => {
+    const firstCheckoutButton = firstCheckoutRef.current;
+    if (!firstCheckoutButton) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyCheckout(!entry.isIntersecting);
+      },
+      {
+        threshold: 0.35,
+      },
+    );
+
+    observer.observe(firstCheckoutButton);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const revealElements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+    if (!revealElements.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.14,
+        rootMargin: '0px 0px -8% 0px',
+      },
+    );
+
+    revealElements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="w-full">
-      <section className="relative pt-16 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="text-center lg:text-left reveal-up">
-            <span className="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-[#E295A3]/20 text-[#A8576A] font-semibold text-sm mb-6 uppercase tracking-wider">
+    <div className="w-full pb-28 sm:pb-32">
+      <section className="relative pt-16 pb-10 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[430px] sm:hidden" aria-hidden="true">
+          <img
+            src={MOBILE_HERO_IMAGE}
+            alt=""
+            className="h-full w-full object-cover object-[center_22%]"
+            width="800"
+            height="1000"
+            loading="lazy"
+            decoding="async"
+            sizes="100vw"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-white/18" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#4A3338]/22 via-[#FFF5F7]/52 to-[#FFF5F7]" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#FFF5F7]" />
+        </div>
+
+        <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+          <div className="relative pt-28 sm:pt-0 text-center lg:text-left reveal-up">
+            <span className="absolute left-1/2 top-0 z-10 inline-flex w-max -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-[#E295A3]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#A8576A] sm:static sm:mb-6 sm:translate-x-0 sm:gap-2 sm:px-3 sm:text-sm sm:tracking-wider">
               <Rabbit size={16} className="text-[#D16075]" /> Atelier 21 • Operação Páscoa Lucrativa
             </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#4A3338] tracking-tight mb-4 leading-tight">
-              Se nesta Páscoa você quer <span className="text-[#D16075]">fazer dinheiro com doces</span>, mas trava no cardápio, no preço e na venda, essa operação foi feita para você
+            <h1 className="mb-4 text-[2.15rem] font-extrabold tracking-tight leading-[1.04] text-[#4A3338] sm:text-4xl sm:leading-tight md:text-5xl">
+              Faça <span className="text-[#D16075]">dinheiro com doces</span> nesta Páscoa
             </h1>
-            <h2 className="text-lg sm:text-xl font-semibold text-[#70545A] mb-6 leading-relaxed">
-              Para quem olha para a Páscoa como chance real de entrar dinheiro, mas sente medo de comprar ingredientes no escuro, cobrar no chute e postar sem transformar isso em encomenda.
-              Aqui você entra com um mapa mais claro:
-              <strong className="text-[#D16075]"> 10 receitas clássicas testadas + 5 queridinhos do TikTok</strong>, uma
-              <strong className="text-[#D16075]"> calculadora de precificação</strong> e um
-              <strong className="text-[#D16075]"> plano de execução para abrir encomendas</strong>.
-            </h2>
+            <p className="mx-auto mb-4 max-w-2xl text-lg font-semibold leading-relaxed text-[#70545A] lg:mx-0 sm:text-xl">
+              Sem travar no cardápio, no preço e na venda. A Operação Páscoa Lucrativa te dá um caminho direto para escolher o que vender, precificar com segurança e abrir encomendas com mais clareza nesta data.
+            </p>
+
+            <p className="mx-auto mb-6 max-w-2xl text-sm leading-relaxed text-[#70545A] lg:mx-0 sm:text-base">
+              Você entra com <strong className="text-[#D16075]">10 receitas clássicas</strong>, <strong className="text-[#D16075]">5 queridinhos do TikTok</strong>, uma <strong className="text-[#D16075]">calculadora de precificação</strong> e um <strong className="text-[#D16075]">plano simples de execução</strong>.
+            </p>
+
+            <div className="mb-6 flex flex-wrap justify-center gap-2 lg:justify-start">
+              <span className="rounded-full border border-[#D16075]/20 bg-white/70 px-3 py-1 text-xs font-semibold text-[#A8576A]">
+                Cardápio validado
+              </span>
+              <span className="rounded-full border border-[#D16075]/20 bg-white/70 px-3 py-1 text-xs font-semibold text-[#A8576A]">
+                Preço com margem
+              </span>
+              <span className="rounded-full border border-[#D16075]/20 bg-white/70 px-3 py-1 text-xs font-semibold text-[#A8576A]">
+                Plano de abertura
+              </span>
+            </div>
 
             <div className="inline-block bg-[#FFF5F7] border-2 border-[#D16075]/30 rounded-2xl px-6 py-3 mb-6 shadow-sm">
               <p className="text-2xl sm:text-3xl font-black text-[#D16075] flex items-center justify-center lg:justify-start gap-3 flex-wrap">
@@ -176,23 +249,9 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
               </p>
             </div>
 
-            <ul className="space-y-3 mb-8 text-left max-w-xl mx-auto lg:mx-0">
-              <li className="flex items-start gap-3 text-[#70545A]">
-                <CheckCircle2 size={20} className="text-[#D16075] shrink-0 mt-0.5" />
-                <span>Para não gastar com ingrediente em receita aleatória e continuar sem saber se aposta no clássico ou no que está chamando atenção agora.</span>
-              </li>
-              <li className="flex items-start gap-3 text-[#70545A]">
-                <CheckCircle2 size={20} className="text-[#D16075] shrink-0 mt-0.5" />
-                <span>Para não cobrar no chute e descobrir depois que trabalhou muito para quase não ver dinheiro.</span>
-              </li>
-              <li className="flex items-start gap-3 text-[#70545A]">
-                <CheckCircle2 size={20} className="text-[#D16075] shrink-0 mt-0.5" />
-                <span>Para não ver a data chegando sem se sentir pronta para abrir as encomendas com confiança.</span>
-              </li>
-            </ul>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
+            <div className="flex flex-col items-center gap-3 lg:items-start">
               <button
+                ref={firstCheckoutRef}
                 onClick={onBuy}
                 className="w-full sm:w-auto px-8 py-4 bg-[#D16075] hover:bg-[#B84D61] text-white rounded-xl font-bold text-lg shadow-lg shadow-[#D16075]/30 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
               >
@@ -204,11 +263,15 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
                   onClick={onAccessMember}
                   onMouseEnter={onPreloadLogin}
                   onFocus={onPreloadLogin}
-                  className="w-full sm:w-auto px-8 py-4 border-2 border-[#D16075]/25 bg-white/80 hover:bg-white text-[#A8576A] rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#A8576A] transition-colors hover:text-[#D16075]"
                 >
-                  Entrar <LogIn size={20} />
+                  Ja e aluno(a)? Entrar <LogIn size={16} />
                 </button>
               )}
+
+              <p className="text-xs font-medium text-[#70545A] sm:text-sm">
+                Acesso imediato, vitalicio e 7 dias de garantia.
+              </p>
             </div>
           </div>
 
@@ -216,8 +279,8 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
             <div className="absolute inset-0 bg-gradient-to-tr from-[#E295A3]/40 to-transparent rounded-full blur-3xl -z-10 transform scale-110" />
             <img
               src={HERO_IMAGE}
-              alt="Ovos de Páscoa Artesanais"
-              className="rounded-3xl shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition-transform duration-500"
+              alt="Ovo de Páscoa recheado com creme e acabamento de chocolate"
+              className="w-full rounded-3xl border-4 border-white object-cover shadow-[0_35px_90px_-35px_rgba(74,51,56,0.38)] aspect-[4/5]"
               width="1200"
               height="1500"
               fetchPriority="high"
@@ -227,22 +290,114 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
               referrerPolicy="no-referrer"
             />
             <div
-              className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-[#FFF5F7] flex items-center gap-3 animate-bounce"
-              style={{ animationDuration: '3s' }}
+              className="absolute -bottom-5 left-6 rounded-2xl border border-[#FFF5F7] bg-white p-4 shadow-xl"
             >
-              <div className="bg-green-100 p-2 rounded-full text-green-600">
-                <TrendingUp size={24} />
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 font-medium">Janela natural de venda</p>
-                <p className="text-sm font-bold text-[#4A3338]">Use a Páscoa para validar com mais contexto</p>
-              </div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#A8576A]">Operacao em 3 frentes</p>
+              <p className="mt-1 text-sm font-bold text-[#4A3338]">Escolher o cardapio, precificar e abrir as vendas.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-y border-[#E295A3]/20 deferred-section">
+      <section className="pt-10 pb-24 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto deferred-section scroll-reveal" data-reveal>
+        <div className="text-center mb-10 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-4">Veja o que existe dentro da Operação Páscoa Lucrativa</h2>
+          <p className="text-lg text-[#70545A] max-w-3xl mx-auto">
+            Em vez de promessa vaga, aqui você enxerga com clareza o que recebe para decidir o cardápio, passar o preço e abrir as encomendas.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+          <div className="bg-[#FFF5F7] border border-[#E295A3]/25 rounded-3xl p-8 shadow-sm">
+            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-5 text-[#D16075] border border-[#E295A3]/25">
+              <Star size={28} />
+            </div>
+            <h3 className="text-2xl font-bold text-[#4A3338] mb-3">10 receitas classicas testadas</h3>
+            <p className="text-[#70545A] mb-5">
+              Produtos de saida mais segura para montar a base do cardapio com mais confianca e previsibilidade comercial.
+            </p>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2 text-sm text-[#4A3338]">
+                <CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" />
+                <span>Base mais estavel para comecar a campanha</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-[#4A3338]">
+                <CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" />
+                <span>Receitas para sair da duvida sobre o que vender</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-[#4A3338]">
+                <CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" />
+                <span>Mais seguranca para nao depender so de tendencia</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-[#4A3338] border border-[#D16075]/20 rounded-3xl p-8 shadow-sm text-white">
+            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-5 text-[#E295A3] border border-white/10">
+              <Gift size={28} />
+            </div>
+            <h3 className="text-2xl font-bold mb-3">5 queridinhos do TikTok</h3>
+            <p className="text-gray-300 mb-5">
+              Receitas com apelo visual forte para reforcar desejo, chamar atencao e te dar mais munição para Stories, Reels e catalogo.
+            </p>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2 text-sm text-gray-200">
+                <CheckCircle2 size={18} className="text-[#E295A3] shrink-0 mt-0.5" />
+                <span>Produtos mais fotogenicos e compartilhaveis</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-200">
+                <CheckCircle2 size={18} className="text-[#E295A3] shrink-0 mt-0.5" />
+                <span>Mais desejo para quem compra pelo visual</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-200">
+                <CheckCircle2 size={18} className="text-[#E295A3] shrink-0 mt-0.5" />
+                <span>Novidade para complementar os classicos</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {MODULES.map(({ accent, description, highlights, icon: Icon, title }) => (
+            <div
+              key={title}
+              className="bg-white p-8 rounded-3xl shadow-xl shadow-[#4A3338]/5 border border-[#E295A3]/30 transition-transform duration-200 hover:-translate-y-1"
+            >
+              <div className="inline-flex px-3 py-1 rounded-full bg-[#FFF5F7] text-[#A8576A] text-xs font-bold uppercase tracking-wider mb-5">
+                {accent}
+              </div>
+              <div className="w-14 h-14 bg-[#FFF5F7] rounded-2xl flex items-center justify-center mb-6 text-[#D16075]">
+                <Icon size={28} />
+              </div>
+              <h3 className="text-2xl font-bold text-[#4A3338] mb-4">{title}</h3>
+              <p className="text-[#70545A] mb-6">{description}</p>
+              <ul className="space-y-3">
+                {highlights.map((highlight) => (
+                  <li key={highlight} className="flex items-start gap-2 text-sm text-[#4A3338]">
+                    <CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" />
+                    <span>{highlight}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 rounded-3xl border border-[#E295A3]/25 bg-[#FFF5F7] p-8 text-center sm:p-10">
+          <h3 className="mb-3 text-2xl font-bold text-[#4A3338]">Voce nao precisa aplicar tudo de uma vez</h3>
+          <p className="mx-auto mb-6 max-w-3xl text-[#70545A]">
+            Primeiro voce usa a Pascoa para validar com mais foco. Depois, se fizer sentido, entra nos bonus de continuidade.
+          </p>
+          <button
+            onClick={onBuy}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#D16075] px-8 py-4 text-lg font-bold text-white shadow-lg shadow-[#D16075]/30 transition-all hover:bg-[#B84D61] sm:w-auto"
+          >
+            Quero entrar com esse plano <ArrowRight size={20} />
+          </button>
+        </div>
+      </section>
+
+      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-y border-[#E295A3]/20 deferred-section scroll-reveal" data-reveal>
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-12">Se você se reconhece em um desses cenários, essa página foi escrita para falar com você</h2>
 
@@ -272,7 +427,7 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
         </div>
       </section>
 
-      <section className="bg-[#FFF5F7] py-16 px-4 sm:px-6 lg:px-8 deferred-section">
+      <section className="bg-[#FFF5F7] py-16 px-4 sm:px-6 lg:px-8 deferred-section scroll-reveal" data-reveal>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-4">Você não precisa passar mais uma Páscoa tentando descobrir tudo sozinha</h2>
@@ -309,7 +464,7 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
         </div>
       </section>
 
-      <section className="bg-[#4A3338] text-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden deferred-section">
+      <section className="bg-[#4A3338] text-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden deferred-section scroll-reveal" data-reveal>
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D16075] rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#E295A3] rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
 
@@ -344,105 +499,7 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
         </div>
       </section>
 
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto deferred-section">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-4">Veja o que existe dentro da área de membros</h2>
-          <p className="text-lg text-[#70545A] max-w-3xl mx-auto">
-            Em vez de uma promessa vaga, aqui você consegue enxergar o que recebe, como cada bloco se conecta e onde está o valor da oferta.
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
-          <div className="bg-[#FFF5F7] border border-[#E295A3]/25 rounded-3xl p-8 shadow-sm">
-            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-5 text-[#D16075] border border-[#E295A3]/25">
-              <Star size={28} />
-            </div>
-            <h3 className="text-2xl font-bold text-[#4A3338] mb-3">10 receitas clássicas testadas</h3>
-            <p className="text-[#70545A] mb-5">
-              Aqui entram os produtos de saída mais segura para quem quer vender com mais confiança: sabores conhecidos, alta aceitação e mais previsibilidade comercial.
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-[#4A3338]">
-                <CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" />
-                <span>Receitas que ajudam a montar a base do cardápio</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-[#4A3338]">
-                <CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" />
-                <span>Mais segurança para quem não quer depender só de tendência</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-[#4A3338]">
-                <CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" />
-                <span>Base mais estável para começar a campanha</span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="bg-[#4A3338] border border-[#D16075]/20 rounded-3xl p-8 shadow-sm text-white">
-            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-5 text-[#E295A3] border border-white/10">
-              <Gift size={28} />
-            </div>
-            <h3 className="text-2xl font-bold mb-3">5 queridinhos do TikTok</h3>
-            <p className="text-gray-300 mb-5">
-              Além dos clássicos, você também vê receitas com apelo visual forte e cara de novidade, para usar o que já chama atenção nas redes a seu favor.
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-gray-200">
-                <CheckCircle2 size={18} className="text-[#E295A3] shrink-0 mt-0.5" />
-                <span>Produtos mais fotogênicos e compartilháveis</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-gray-200">
-                <CheckCircle2 size={18} className="text-[#E295A3] shrink-0 mt-0.5" />
-                <span>Reforço de desejo para quem compra pelo visual</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-gray-200">
-                <CheckCircle2 size={18} className="text-[#E295A3] shrink-0 mt-0.5" />
-                <span>Mais munição para Stories, Reels e catálogo</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {MODULES.map(({ accent, description, highlights, icon: Icon, title }) => (
-            <div
-              key={title}
-              className="bg-white p-8 rounded-3xl shadow-xl shadow-[#4A3338]/5 border border-[#E295A3]/30 transition-transform duration-200 hover:-translate-y-1"
-            >
-              <div className="inline-flex px-3 py-1 rounded-full bg-[#FFF5F7] text-[#A8576A] text-xs font-bold uppercase tracking-wider mb-5">
-                {accent}
-              </div>
-              <div className="w-14 h-14 bg-[#FFF5F7] rounded-2xl flex items-center justify-center mb-6 text-[#D16075]">
-                <Icon size={28} />
-              </div>
-              <h3 className="text-2xl font-bold text-[#4A3338] mb-4">{title}</h3>
-              <p className="text-[#70545A] mb-6">{description}</p>
-              <ul className="space-y-3">
-                {highlights.map((highlight) => (
-                  <li key={highlight} className="flex items-start gap-2 text-sm text-[#4A3338]">
-                    <CheckCircle2 size={18} className="text-[#D16075] shrink-0 mt-0.5" />
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 bg-[#FFF5F7] border border-[#E295A3]/25 rounded-3xl p-8 sm:p-10 text-center">
-          <h3 className="text-2xl font-bold text-[#4A3338] mb-3">Você não precisa aplicar tudo de uma vez</h3>
-          <p className="text-[#70545A] mb-6 max-w-3xl mx-auto">
-            Primeiro você usa a Páscoa como validação com mais foco. Depois, se fizer sentido, entra nos bônus de continuidade.
-          </p>
-          <button
-            onClick={onBuy}
-            className="w-full sm:w-auto px-8 py-4 bg-[#D16075] hover:bg-[#B84D61] text-white rounded-xl font-bold text-lg shadow-lg shadow-[#D16075]/30 transition-all transform hover:scale-105 inline-flex items-center justify-center gap-2"
-          >
-            Quero entrar com esse plano <ArrowRight size={20} />
-          </button>
-        </div>
-      </section>
-
-      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E295A3]/20 deferred-section">
+      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E295A3]/20 deferred-section scroll-reveal" data-reveal>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-4">Talvez o que você queira não seja só aprender a fazer doce</h2>
@@ -468,7 +525,7 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
         </div>
       </section>
 
-      <section className="bg-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E295A3]/30 deferred-section">
+      <section className="bg-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E295A3]/30 deferred-section scroll-reveal" data-reveal>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-4">Perguntas frequentes antes de entrar</h2>
@@ -491,7 +548,7 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
         </div>
       </section>
 
-      <section className="bg-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E295A3]/30 deferred-section">
+      <section className="bg-[#FFF5F7] py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E295A3]/30 deferred-section scroll-reveal" data-reveal>
         <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-[#D16075]/20 relative">
           <div className="h-48 w-full overflow-hidden relative">
             <img
@@ -548,6 +605,33 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
           </div>
         </section>
       )}
+
+      <div
+        className={`fixed inset-x-0 bottom-0 z-50 px-3 transition-all duration-500 ease-out sm:px-6 ${
+          showStickyCheckout
+            ? 'translate-y-0 opacity-100'
+            : 'pointer-events-none translate-y-8 opacity-0'
+        }`}
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)' }}
+      >
+        <div className="mx-auto flex max-w-4xl items-center gap-3 rounded-[28px] border border-white/70 bg-[#FFF5F7]/95 p-3 shadow-[0_-8px_30px_rgba(74,51,56,0.14)] backdrop-blur-md sm:gap-4 sm:p-4">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#A8576A] sm:text-xs">
+              Oferta especial
+            </p>
+            <p className="truncate text-sm font-semibold text-[#4A3338] sm:text-base">
+              Entrar agora por R$ 49,90
+            </p>
+          </div>
+
+          <button
+            onClick={onBuy}
+            className="shrink-0 rounded-2xl bg-[#D16075] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#D16075]/30 transition-all hover:bg-[#B84D61] sm:px-7 sm:text-base"
+          >
+            Ir para o checkout
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

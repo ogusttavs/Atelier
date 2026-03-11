@@ -1,6 +1,7 @@
-interface WelcomeEmailInput {
+interface AccessEmailInput {
+  mode: 'recovery' | 'welcome';
   name: string;
-  password: string;
+  setupUrl: string;
   to: string;
 }
 
@@ -13,23 +14,70 @@ function getEmailProvider(): string {
   return (process.env.EMAIL_PROVIDER || 'resend').toLowerCase();
 }
 
-function getLoginUrl(): string {
-  if (process.env.APP_LOGIN_URL) return process.env.APP_LOGIN_URL;
-
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-  return `${frontendUrl.replace(/\/+$/, '')}/login`;
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
-export async function sendWelcomeEmail({ to, name, password }: WelcomeEmailInput): Promise<EmailResult> {
+function extractSupportEmailAddress(): string {
+  const raw = process.env.SUPPORT_EMAIL || process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'acesso@oatelier21.com.br';
+  const match = raw.match(/<([^>]+)>/);
+  return match?.[1] || raw;
+}
+
+function buildEmailCopy(mode: AccessEmailInput['mode']) {
+  const supportEmail = extractSupportEmailAddress();
+
+  if (mode === 'recovery') {
+    return {
+      intro: 'Recebemos um pedido para reenviar o seu acesso ao Atelier 21.',
+      ctaLabel: 'Criar minha nova senha',
+      outro:
+        'Use esse mesmo link para criar uma nova senha e entrar na sua area de membros.',
+      steps: [
+        'Clique no botao abaixo.',
+        'Crie sua nova senha.',
+        'Entre na area de membros com o mesmo email da compra.',
+      ],
+      subject: 'Seu novo link de acesso ao Atelier 21',
+      supportEmail,
+      thanks:
+        'Se voce nao pediu esse reenvio, pode ignorar este email com seguranca.',
+      title: 'Seu acesso foi reenviado',
+    };
+  }
+
+  return {
+    intro: 'Sua compra foi aprovada e seu acesso a Operacao Pascoa Lucrativa ja esta sendo preparado.',
+    ctaLabel: 'Definir minha senha',
+    outro:
+      'Assim que criar sua senha, voce ja pode entrar na area de membros e comecar.',
+    steps: [
+      'Clique no botao abaixo para definir sua senha.',
+      'Use o mesmo email da compra para entrar.',
+      'Acesse a area de membros e comece pelo primeiro modulo.',
+    ],
+    subject: 'Compra aprovada! Seu acesso ao Atelier 21 chegou',
+    supportEmail,
+    thanks:
+      'Obrigada pela confianca. Estou feliz em te acompanhar nessa Pascoa.',
+    title: 'Seu acesso chegou',
+  };
+}
+
+async function sendAccessEmail({ mode, to, name, setupUrl }: AccessEmailInput): Promise<EmailResult> {
   const emailProvider = getEmailProvider();
   const resendApiKey = process.env.RESEND_API_KEY;
   const resendFromEmail = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM;
-  const loginUrl = getLoginUrl();
 
   if (emailProvider !== 'resend') {
     return {
       sent: false,
-      error: `EMAIL_PROVIDER '${emailProvider}' não é suportado neste projeto.`,
+      error: `EMAIL_PROVIDER '${emailProvider}' nao e suportado neste projeto.`,
     };
   }
 
@@ -40,6 +88,14 @@ export async function sendWelcomeEmail({ to, name, password }: WelcomeEmailInput
     };
   }
 
+  const safeName = escapeHtml(name);
+  const safeSetupUrl = escapeHtml(setupUrl);
+  const safeEmail = escapeHtml(to);
+  const copy = buildEmailCopy(mode);
+  const stepsHtml = copy.steps
+    .map((step) => `<li style="margin: 0 0 8px;">${escapeHtml(step)}</li>`)
+    .join('');
+
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -49,19 +105,32 @@ export async function sendWelcomeEmail({ to, name, password }: WelcomeEmailInput
     body: JSON.stringify({
       from: resendFromEmail,
       to: [to],
-      subject: 'Seu acesso à Operação Páscoa Lucrativa chegou!',
+      subject: copy.subject,
       html: `
-        <div style="font-family: Arial, sans-serif; color: #4A3338; line-height: 1.6;">
-          <h1 style="margin-bottom: 8px;">Seu acesso chegou</h1>
-          <p>Oi, ${name}!</p>
-          <p>Sua compra foi aprovada e seu acesso à <strong>Operação Páscoa Lucrativa</strong> já está liberado.</p>
-          <p><strong>Email:</strong> ${to}<br /><strong>Senha:</strong> ${password}</p>
+        <div style="font-family: Arial, sans-serif; color: #4A3338; line-height: 1.6; max-width: 640px; margin: 0 auto;">
+          <h1 style="margin-bottom: 8px;">${copy.title}</h1>
+          <p>Oi, ${safeName}!</p>
+          <p>${copy.intro}</p>
+          <p><strong>Email da compra:</strong> ${safeEmail}</p>
+
+          <div style="background: #FFF5F7; border: 1px solid #E9C5CD; border-radius: 14px; padding: 18px; margin: 20px 0;">
+            <p style="margin-top: 0; font-weight: bold;">Passo a passo:</p>
+            <ol style="padding-left: 18px; margin-bottom: 0;">
+              ${stepsHtml}
+            </ol>
+          </div>
+
           <p>
-            <a href="${loginUrl}" style="display: inline-block; padding: 12px 18px; background: #D16075; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold;">
-              Entrar na Área de Membros
+            <a href="${safeSetupUrl}" style="display: inline-block; padding: 12px 18px; background: #D16075; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold;">
+              ${copy.ctaLabel}
             </a>
           </p>
-          <p>Se preferir, copie este link: ${loginUrl}</p>
+
+          <p>${copy.outro}</p>
+          <p>Esse link expira em 24 horas e pode ser usado apenas para voce.</p>
+          <p>Se preferir, copie este link: ${safeSetupUrl}</p>
+          <p>${copy.thanks}</p>
+          <p style="margin-bottom: 0;">Se precisar de ajuda, responda este email ou fale com a gente em <strong>${escapeHtml(copy.supportEmail)}</strong>.</p>
         </div>
       `,
     }),
@@ -75,4 +144,12 @@ export async function sendWelcomeEmail({ to, name, password }: WelcomeEmailInput
   }
 
   return { sent: true };
+}
+
+export function sendWelcomeEmail(input: Omit<AccessEmailInput, 'mode'>): Promise<EmailResult> {
+  return sendAccessEmail({ ...input, mode: 'welcome' });
+}
+
+export function sendRecoveryEmail(input: Omit<AccessEmailInput, 'mode'>): Promise<EmailResult> {
+  return sendAccessEmail({ ...input, mode: 'recovery' });
 }

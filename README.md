@@ -1,19 +1,22 @@
 # Atelier 21 — Operação Páscoa Lucrativa
 
-Aplicação de vendas + área de membros para o infoproduto do Atelier 21.
+Aplicação de vendas e área de membros para o infoproduto do Atelier 21.
 
-## Stack
+## Stack atual
 
-- React 19 + Vite + Tailwind CSS 4 + Motion
+- React 19 + Vite
+- Tailwind CSS 4
 - Express + SQLite
-- Autenticação própria com token assinado
-- Checkout Kiwify + webhook
+- autenticação própria com token assinado
+- checkout Kiwify + webhook
+- email pós-compra via Resend
 
-## Rotas da aplicação
+## Rotas
 
 - `/` — landing page
 - `/login` — login da área de membros
 - `/member` — área de membros
+- `/obrigado` — página de obrigado e reenvio de acesso
 
 ## Rodar localmente
 
@@ -37,71 +40,34 @@ Backend: `http://localhost:3001`
 
 Copie `.env.example` para `.env` e preencha:
 
-- `VITE_KIWIFY_CHECKOUT_URL` — link do checkout mostrado na LP
-- `JWT_SECRET` — segredo do token
-- `KIWIFY_WEBHOOK_TOKEN` — token de segurança do webhook
-- `FRONTEND_URL` — URL do frontend
-- `APP_LOGIN_URL` — URL pública do `/login`
-- `RESEND_API_KEY` — chave da API do Resend
-- `RESEND_FROM_EMAIL` — remetente validado no Resend
-- `EMAIL_PROVIDER` — compatibilidade com a estrutura já usada na VPS (`resend`)
-- `EMAIL_FROM` — compatibilidade com a estrutura já usada na VPS
-- `ADMIN_SECRET` — segredo das rotas admin
+- `VITE_KIWIFY_CHECKOUT_URL`
+- `PORT`
+- `JWT_SECRET`
+- `DB_PATH`
+- `FRONTEND_URL`
+- `APP_LOGIN_URL`
+- `KIWIFY_WEBHOOK_TOKEN`
+- `EMAIL_PROVIDER`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `EMAIL_FROM`
+- `ADMIN_SECRET`
 
-## Hospedagem na VPS
+## Fluxo principal
 
-O projeto não será publicado na Vercel.
+1. A LP leva para o checkout da Kiwify.
+2. A compra aprovada chama `POST /api/webhook/kiwify`.
+3. O backend cria ou reativa a usuária na tabela `users`.
+4. O acesso fica com `access_status = active`.
+5. O email de boas-vindas envia um link para definir a senha.
+6. A página `/obrigado` orienta a compradora e permite reenviar o acesso.
+7. A usuária acessa `/login` e entra na área de membros.
 
-Estratégia recomendada na VPS:
-
-- frontend buildado com `npm run build`
-- arquivos estáticos servidos por Nginx
-- backend Node/Express rodando como processo gerenciado por PM2 ou systemd
-- Nginx fazendo proxy de `/api/*` para o backend
-- Nginx reescrevendo `/login` e `/member` para `index.html`
-
-## Fluxo de acesso
-
-1. A compra aprovada chama `POST /api/webhook/kiwify`.
-2. O backend cria ou reativa a usuária na tabela `users` do banco `atelier21.db`.
-3. O acesso fica marcado com `access_status = active`.
-4. O login valida email, senha e status ativo.
-5. A verificação do token também consulta o banco para confirmar que o acesso continua ativo.
-
-Arquivos principais desse fluxo:
+Arquivos centrais desse fluxo:
 
 - `src/server.ts`
 - `src/services/email.ts`
 - `src/contexts/AuthContext.tsx`
-
-## Onde os dados ficam salvos
-
-Os usuários são armazenados em `atelier21.db`, na raiz do projeto.
-
-Campos principais da tabela `users`:
-
-- `email`
-- `password_hash`
-- `name`
-- `kiwify_order_id`
-- `access_status`
-- `created_at`
-
-## Email automático
-
-O envio automático de boas-vindas está centralizado em `src/services/email.ts`.
-
-Hoje ele usa a API HTTP do Resend sem SDK extra. O webhook chama esse serviço logo após criar a usuária.
-
-O projeto aceita tanto `RESEND_FROM_EMAIL` quanto `EMAIL_FROM`, para reaproveitar a mesma estrutura já usada em outros projetos da VPS.
-
-Se `RESEND_API_KEY` ou `RESEND_FROM_EMAIL`/`EMAIL_FROM` não estiverem configurados, o acesso é criado mesmo assim e o backend registra um aviso no log.
-
-## Autenticação
-
-O login depende da API real em `src/server.ts` e da tabela `users` no SQLite.
-
-Sem backend ativo, o acesso não é liberado.
 
 ## Comandos de validação
 
@@ -110,8 +76,23 @@ npm run lint
 npm run build
 ```
 
-O `build` agora roda `tsc --noEmit` antes do bundle do Vite.
+Em 10/03/2026, `npm run build` passou com sucesso.
 
-## Checklist operacional
+## Documentação do projeto
 
-O passo a passo detalhado para a VPS está em [CHECKLIST_IMPLANTACAO_VPS.md](./CHECKLIST_IMPLANTACAO_VPS.md).
+- `PROJETO.md` — status real, diagnóstico e próxima etapa
+- `ESTRATEGIA_MARKETING_VENDAS.md` — direção comercial do ciclo atual
+- `CHECKLIST_IMPLANTACAO_VPS.md` — implantação e homologação da VPS
+
+## Hospedagem
+
+Estratégia atual de produção:
+
+- frontend buildado e servido por Nginx
+- backend Node/Express gerenciado por PM2
+- proxy de `/api/*` para o backend
+- reescrita de SPA para `/login` e `/member`
+
+## Observação importante
+
+A produção já foi homologada no servidor para `login`, `verify`, rotas admin, `webhook` e envio aceito pela Resend. O próximo foco do projeto é marketing, prova social e conversão.

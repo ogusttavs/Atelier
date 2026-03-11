@@ -1,28 +1,29 @@
-# 🐰 Operação Páscoa Lucrativa — Atelier 21
+# Operação Páscoa Lucrativa — Atelier 21
 
-> Documento mestre do projeto. Atualizado sempre que houver mudanças, novas ideias ou progresso.
-> **Última atualização:** 09/03/2026 — revisão técnica e alinhamento de produção
+> Documento mestre do projeto.
+> Última atualização: 10/03/2026 — revisão geral do produto, da estratégia e da próxima etapa.
 
 ---
 
-## 1. Visão Geral
+## 1. Resumo Executivo
 
-**O que é:** Infoproduto digital para confeiteiras iniciantes e intermediárias que querem lucrar vendendo doces artesanais na Páscoa (e o ano todo).
+**O que é:** infoproduto low ticket para confeiteiras que querem usar a Páscoa como janela de faturamento, com um caminho integrado de `o que vender + quanto cobrar + como abrir as encomendas`.
 
 **Marca:** Atelier 21 — "Ensinar a fazer e vender doces no século 21"
 
-**Preço:** R$ 49,90 (acesso vitalício) — âncora de R$ 197,00
+**Preço atual:** R$ 49,90 com âncora visual de R$ 197,00
 
 **Domínio de produção:** `https://oatelier21.com.br`
 
-**Público-alvo:**
-| Persona | Perfil |
-|---------|--------|
-| Iniciantes do Zero | Precisa de renda rápida, nunca fez doce, mas tem vontade de aprender |
-| Mães e Donas de Casa | Renda extra sem sair de casa, aproveitando tempo livre |
-| Confeiteiras Travadas | Já faz doces mas não sabe precificar nem vender |
+**Modelo operacional atual:** produto perpétuo na infraestrutura, com campanha comercial sazonal de Páscoa.
 
-**Stack técnica:** React 19 + Vite + Tailwind CSS 4 + Framer Motion + Express + SQLite
+**Status real do projeto em 10/03/2026:**
+- produto e área de membros implementados
+- produção homologada no servidor com domínio, Nginx, PM2, banco e API pública ativos
+- login, `verify`, rotas admin, webhook e envio aceito pela Resend testados em produção
+- backup inicial do banco criado em `/var/www/atelier21/shared/atelier21.db.backup-20260310-181050`
+
+**Próxima etapa recomendada:** sair da infraestrutura e entrar em operação de marketing, usando o fluxo já homologado para captar prova social, objeções reais e melhorar conversão.
 
 ---
 
@@ -30,229 +31,226 @@
 
 O produto entrega **3 módulos** dentro de uma área de membros própria:
 
-### Módulo 1 — Cardápio Validado de Páscoa 🍫
-Guia com 10 receitas clássicas de maior segurança comercial + 5 queridinhos do TikTok para desejo visual e vitrine da campanha.
+### Módulo 1 — O que vender
 
-| # | Receita | Preço Venda | Custo | Lucro | Margem | Status |
-|---|---------|-------------|-------|-------|--------|--------|
-| 1 | Ovo de Colher Ninho c/ Nutella | R$ 85-95 | R$ 28-35 | ~R$ 55 | 160% | ✅ |
-| 2 | Ovo de Colher Pistache | R$ 95-120 | R$ 40-50 | ~R$ 60 | 140% | ✅ |
-| 3 | Ovo de Colher Brigadeiro Gourmet | R$ 75-89 | R$ 22-28 | ~R$ 55 | 200% | ✅ |
-| 4 | Ovo de Colher Biscoff | R$ 89-110 | R$ 35-42 | ~R$ 58 | 155% | ✅ |
-| 5 | Ovo em Fatias 🚀 (TENDÊNCIA 2026) | R$ 20-35/fatia | R$ 5-8/fatia | ~R$ 20/fatia | 300% | ✅ |
-| 6 | Barras Recheadas Gourmet | R$ 25-40 | R$ 8-12 | ~R$ 22 | 200% | ✅ |
-| 7 | Cones Trufados Decorados | R$ 35-50/kit 5 | R$ 8-12/kit | ~R$ 32/kit | 300% | ✅ |
-| 8 | Trio Mini Ovos Degustação | R$ 45-65 | R$ 15-20 | ~R$ 38 | 200% | ✅ |
-| 9 | Kit Confeiteiro Infantil | R$ 40-55 | R$ 12-18 | ~R$ 30 | 175% | ✅ |
-| 10 | Trufas Gourmet (caixa 12) | R$ 40-60 | R$ 10-15 | ~R$ 38 | 280% | ✅ |
+Guia com **10 receitas clássicas** e **5 queridinhos do TikTok**, com foco em segurança comercial e apelo visual.
 
-Cada receita inclui: card expandível, dashboard de precificação, ingredientes, passo a passo, dica de embalagem e links para referência em YouTube/TikTok.
+Cada receita entrega:
+- descrição comercial do produto
+- faixa de preço, custo, lucro e margem
+- ingredientes
+- passo a passo
+- dica de embalagem
+- links de apoio para YouTube e TikTok
 
-### Módulo 2 — Precificação sem Chute 🧮
-Calculadora interativa: ingredientes → custos → embalagem → mão de obra → margens → preço de venda + lucro.
-**Status:** ✅ Implementado
+### Módulo 2 — Quanto cobrar
 
-### Módulo 3 — Execução Comercial VTSD 📈
-8 frentes centrais para a campanha de Páscoa + 4 próximos passos opcionais de monetização e continuidade. Cada uma expandível com passo a passo de execução + download PDF via `window.print()`.
-**Status:** ✅ Implementado
+Calculadora interativa de precificação com:
+- ingredientes
+- embalagem
+- mão de obra
+- custos fixos
+- margem de lucro
+- preço sugerido e lucro estimado
 
----
+### Módulo 3 — Como vender
 
-## 3. Infraestrutura
+Bloco de execução comercial dividido em:
+- **8 frentes centrais para a campanha de Páscoa**
+- **4 próximos passos opcionais** de continuidade e monetização
 
-| Sistema | Modelo | Status |
-|---------|--------|--------|
-| Pagamento | Kiwify (link direto + webhook) | 🟨 Checkout configurado no frontend; falta validar webhook em produção |
-| Autenticação | Email + senha + token + SQLite | ✅ Backend criado (`server.ts`) com validação real via API + banco |
-| Área de membros | Layout responsivo próprio | ✅ Implementado |
-| Email pós-compra | Resend via API HTTP | 🟨 Estrutura pronta em `src/services/email.ts`; falta validar integração final na VPS |
-| Deploy | VPS + Nginx + PM2 + SSL | 🟨 Base online em `oatelier21.com.br`; falta homologação comercial completa |
+O foco do ciclo atual deve ficar no bloco sazonal. Continuidade, order bump, upsell e recorrência entram depois da primeira validação comercial.
 
 ---
 
-## 4. Progresso
+## 3. Público e Promessa Atual
 
-### ✅ Concluído
-- Sales page completa (`SalesPage.tsx`)
-- Rota real de login em `/login`
-- Login page (`LoginPage.tsx`)
-- Área de membros com sidebar + nav mobile (`MemberArea.tsx`)
-- **15 receitas** com vídeos, precificação e dicas (`EasterGuide.tsx`, `RecipeCard.tsx`)
-  - 10 clássicas com filtros por dificuldade (Fácil / Médio / Avançado)
-  - 5 novas **Queridinhos do TikTok** (Cenoura, Bark, Hot Choc Bomb, Geode, Churros)
-- Vídeos corrigidos: iframe quebrado substituído por links YouTube + TikTok que abrem em nova aba
-- Calculadora de precificação interativa (`PricingCalculator.tsx`)
-- módulo de execução comercial VTSD com passo a passo + PDF download (`SalesStrategies.tsx`, `StrategyCard.tsx`)
-- AuthContext com autenticação real via API (`AuthContext.tsx`)
-- **Backend Express + SQLite + JWT** (`server.ts`)
-  - `POST /api/auth/login` — autenticação
-  - `POST /api/auth/verify` — validação de token + validação de acesso ativo no banco
-  - `POST /api/webhook/kiwify` — cria ou reativa usuário após compra aprovada
-  - `POST /api/admin/create-user` — criação manual de usuário
-  - `GET /api/admin/users` — listagem de usuários
-  - `GET /api/health` — health check
-- Serviço de email automático via Resend (`src/services/email.ts`)
-- `build` técnico validando TypeScript antes do bundle Vite
-- Proxy Vite `/api → localhost:3001` configurado (`vite.config.ts`)
-- `.env.example` com todas as variáveis documentadas
-- SEO básico (meta description + Open Graph no `index.html`)
-- `@types/react` e `@types/react-dom` instalados
-- Documento de estratégia salvo em `ESTRATEGIA_MARKETING_VENDAS.md`
-- Checklist operacional da VPS salvo em `CHECKLIST_IMPLANTACAO_VPS.md`
-- Domínio `oatelier21.com.br` apontado para a VPS com HTTPS ativo
-- Frontend publicado na VPS via Nginx
-- Backend publicado na VPS via PM2 na porta `3010`
-- Banco SQLite criado em `/var/www/atelier21/shared/atelier21.db`
+### Personas já explicitadas no produto
 
-### 🔄 Em Andamento
-- _(nenhuma tarefa em andamento agora)_
+| Persona | Leitura prática |
+|---------|-----------------|
+| Iniciantes do Zero | quer renda rápida, mas trava no cardápio e no medo de errar |
+| Mães e Donas de Casa | quer renda em casa, com algo aplicável e direto |
+| Confeiteiras Travadas | já produz, mas ainda trava em preço, oferta e vendas |
 
-### ⬜ Pendente
-- Configurar variáveis reais em `.env` da VPS (`VITE_KIWIFY_CHECKOUT_URL`, `KIWIFY_WEBHOOK_TOKEN`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `APP_LOGIN_URL`)
-- Configurar webhook no painel Kiwify apontando para `POST /api/webhook/kiwify`
-- Testar fluxo completo: compra → webhook → email → login
-- Validar remetente próprio `acesso@oatelier21.com.br` no Resend
-- Inserir prova social real na sales page
+### Promessa que o produto já sustenta
+
+Entrar na Páscoa com mais clareza para:
+- escolher um cardápio com apelo comercial
+- cobrar sem sair no prejuízo
+- abrir as encomendas com menos improviso
+
+### Dor central que mais organiza a oferta
+
+A cliente não quer só aprender confeitaria. Ela quer **transformar doce em dinheiro nesta data**, sem travar no produto, no preço e na venda.
 
 ---
 
-## 5. Como Rodar Localmente
+## 4. Estado Atual do Software
+
+### Frontend implementado
+
+- landing page em `/`
+- login em `/login`
+- área de membros em `/member`
+- navegação client-side com fallback para login ou membro conforme autenticação
+- lazy loading dos módulos de login e membros
+
+### Conteúdo implementado
+
+- `EasterGuide.tsx`: módulo com 15 produtos
+- `PricingCalculator.tsx`: calculadora interativa
+- `SalesStrategies.tsx`: bloco comercial sazonal + continuidade
+- `SalesPage.tsx`: página de vendas com oferta, FAQ, garantia e CTAs
+
+### Backend implementado
+
+- `POST /api/auth/login`
+- `POST /api/auth/verify`
+- `POST /api/webhook/kiwify`
+- `POST /api/admin/create-user`
+- `GET /api/admin/users`
+- `GET /api/health`
+
+### Persistência e acesso
+
+- SQLite com tabela `users`
+- autenticação por token assinado
+- controle de acesso por `access_status`
+- criação ou reativação de usuária pelo webhook
+
+### Email pós-compra
+
+- serviço implementado em `src/services/email.ts`
+- provider atual: Resend via API HTTP
+- envio depende de `RESEND_API_KEY` e remetente válido
+
+### Verificação técnica mais recente
+
+Em 10/03/2026, `npm run build` passou com sucesso.
+
+---
+
+## 5. Infraestrutura e Produção
+
+| Camada | Situação atual | Observação |
+|--------|----------------|------------|
+| Domínio + HTTPS | online | `oatelier21.com.br` já responde |
+| Frontend | publicado | servido via Nginx |
+| Backend | publicado | rodando via PM2 na porta `3010` |
+| Banco | criado | SQLite em `/var/www/atelier21/shared/atelier21.db` |
+| Checkout | pronto no app | falta apenas confirmação via compra real no checkout oficial |
+| Webhook | homologado | evento QA `paid` criou acesso com sucesso |
+| Email de acesso | homologado | Resend aceitou envio em produção (`email_sent: true`) |
+
+---
+
+## 6. O Que Já Está Validado e O Que Ainda Falta
+
+### Já validado em produção
+
+- estrutura de oferta em 3 módulos
+- LP pública por HTTPS
+- backend e autenticação reais
+- `POST /api/auth/login`
+- `POST /api/auth/verify`
+- `POST /api/admin/create-user`
+- `GET /api/admin/users`
+- `POST /api/webhook/kiwify`
+- criação de acesso com `access_status = active`
+- envio aceito pela Resend
+- build de produção
+- backup inicial do banco
+
+### O que ainda é confirmação externa, não bloqueio técnico
+
+- compra real pelo checkout oficial da Kiwify
+- recebimento do email em uma caixa de entrada real
+- coleta de prova social real
+- coleta de objeções reais para LP e WhatsApp
+
+---
+
+## 7. Diagnóstico Atual do Projeto
+
+O projeto **não está travado por produto**. Ele já tem:
+- promessa clara
+- ticket de entrada
+- área de entrega pronta
+- fluxo técnico de acesso pronto
+
+O maior risco atual está em dois pontos:
+- **conversão**, porque a LP ainda depende mais de estrutura do que de prova social e objeções reais
+- **operação comercial**, porque agora o gargalo sai da tecnologia e passa para aquisição, mensagem e volume de testes
+
+Também existe um ponto de foco:
+- o bloco de continuidade dentro do módulo 3 é útil como backlog, mas não deve competir com a promessa principal de Páscoa neste primeiro ciclo
+
+---
+
+## 8. Próxima Etapa Recomendada
+
+### Meta imediata
+
+**Operar marketing e conversão em cima da infraestrutura já pronta.**
+
+### Ordem recomendada
+
+1. começar tráfego de conteúdo e aquisição com CTA para LP e WhatsApp
+2. captar prints, dúvidas e objeções de leads e compradoras
+3. inserir prova social real na LP
+4. transformar objeções reais em FAQ, Stories e mensagens de apoio
+5. organizar um pico sazonal mais agressivo conforme a janela de Páscoa encurta
+
+### Por que essa é a próxima etapa
+
+Porque o lado técnico deixou de ser o gargalo. O projeto já consegue:
+- receber tráfego
+- entregar checkout
+- criar acesso
+- validar login
+- enviar email
+
+Agora o crescimento depende de marketing, prova e refinamento de mensagem.
+
+---
+
+## 9. Backlog Pós-Tração Inicial
+
+Depois de ganhar prova e volume comercial, a ordem sugerida é:
+
+1. mensagens curtas de recuperação por WhatsApp
+2. pre-checkout e recuperação estruturada
+3. order bump
+4. upsell
+5. produto de continuidade pós-Páscoa
+
+---
+
+## 10. Como Rodar Localmente
 
 ```bash
 # Terminal 1 — Frontend
-npm run dev          # http://localhost:3000
+npm run dev
 
 # Terminal 2 — Backend
-npx tsx src/server.ts   # http://localhost:3001
-
-# Rotas principais
-# LP:      http://localhost:3000/
-# Login:   http://localhost:3000/login
-# Membros: http://localhost:3000/member
-
-# O login depende do backend + banco ativos
+npx tsx src/server.ts
 ```
 
----
+Rotas principais:
+- `http://localhost:3000/`
+- `http://localhost:3000/login`
+- `http://localhost:3000/member`
 
-## 6. Configuração para Produção na VPS
-
-1. Copiar `.env.example` → `.env` e preencher os valores reais
-2. Confirmar `VITE_KIWIFY_CHECKOUT_URL` com o checkout oficial do produto
-3. No painel Kiwify: Produto → Webhooks → Adicionar `https://seu-dominio/api/webhook/kiwify`
-4. Configurar `KIWIFY_WEBHOOK_TOKEN` igual no `.env` e no painel Kiwify
-5. Configurar `APP_LOGIN_URL` com a URL pública do `/login`
-6. Configurar `RESEND_API_KEY` e `RESEND_FROM_EMAIL` para liberar o email automático
-7. Configurar o servidor web da VPS para servir a SPA e reescrever `/login` e `/member` para `index.html`
-8. Configurar o backend Node para rodar em processo persistente
+O login depende do backend e do banco ativos.
 
 ---
 
-## 7. Fluxo de Acesso, Validação e Email
+## 11. Documentos Relacionados
 
-### Onde o webhook cria o usuário
-
-O webhook está em `POST /api/webhook/kiwify`, no arquivo `src/server.ts`.
-
-Quando recebe um evento com `order_status = "paid"`:
-
-- lê nome, email e `order_id`
-- cria ou reativa a usuária
-- define `access_status = active`
-- tenta enviar o email automático de boas-vindas
-
-### Onde o usuário é armazenado
-
-Os dados ficam no arquivo SQLite `atelier21.db`, na raiz do projeto.
-
-Tabela principal: `users`
-
-Campos relevantes:
-
-- `email`
-- `password_hash`
-- `name`
-- `kiwify_order_id`
-- `access_status`
-- `created_at`
-
-### Como a validação de acesso funciona
-
-O projeto não trabalha com "assinatura recorrente". O produto é de acesso vitalício.
-
-Então a regra atual é:
-
-- compra aprovada cria ou reativa a usuária
-- login só funciona se a usuária existir e estiver com `access_status = active`
-- a verificação do token também consulta o banco para confirmar que o acesso continua ativo
-
-### Onde criar os emails automáticos
-
-O envio automático está centralizado em `src/services/email.ts`.
-
-Hoje o projeto usa a API HTTP do Resend sem SDK extra. Para ativar de verdade, basta configurar:
-
-- `RESEND_API_KEY`
-- `RESEND_FROM_EMAIL`
-- `APP_LOGIN_URL`
-
----
-
-## 8. Decisões Tomadas
-
-| Decisão | Motivo | Data |
-|---------|--------|------|
-| Kiwify para pagamento | Checkout simples, decisão anterior | 09/03 |
-| Área de membros própria | Controle total da experiência | 09/03 |
-| JWT próprio (sem lib) | Zero dependências extras | 09/03 |
-| SQLite (better-sqlite3) | Self-hosted, sem dep. externa | 09/03 |
-| YouTube search embed | Vídeos de terceiros por enquanto | 09/03 |
-| PDF via browser print | Sem biblioteca extra | 09/03 |
-| Preço R$ 49,90 | Faixa de impulso | Original |
-
----
-
-## 9. Ideias Futuras
-
-- [ ] Vídeos próprios do Atelier 21
-- [ ] Refinar prova social real na sales page
-- [ ] Programa de afiliados Kiwify
-- [ ] Expandir para Dia das Mães, Natal, etc.
-- [ ] Receitas sazonais ao longo do ano
-- [ ] Comunidade WhatsApp/Telegram
-- [ ] Email marketing (welcome sequence)
-- [ ] Calculadora "quanto posso faturar"
-- [ ] PWA mobile
-
----
-
-## 10. Arquitetura de Arquivos
-
-```
-site/
-├── index.html              # SEO (meta + OG tags)
-├── package.json
-├── vite.config.ts          # Proxy /api → :3001
-├── .env.example            # Variáveis de ambiente documentadas
-├── PROJETO.md              # ← Este documento
-├── atelier21.db            # Banco SQLite (gerado automaticamente)
-└── src/
-    ├── main.tsx
-    ├── App.tsx              # Roteamento: sales / login / member
-    ├── index.css
-    ├── server.ts            # ✅ Backend Express + SQLite + controle de acesso
-    ├── vite-env.d.ts        # Tipagem das variáveis Vite
-    ├── contexts/
-    │   └── AuthContext.tsx  # Auth com API real
-    ├── services/
-    │   └── email.ts         # Envio automático de email via Resend
-    └── components/
-        ├── SalesPage.tsx    # Página de vendas
-        ├── LoginPage.tsx    # Login da área de membros
-        ├── MemberArea.tsx   # Área de membros (sidebar + mobile nav)
-        ├── EasterGuide.tsx  # Módulo 1: Cardápio Validado
-        ├── RecipeCard.tsx   # Card expandível de receita
-        ├── PricingCalculator.tsx  # Módulo 2: Calculadora
-        ├── SalesStrategies.tsx    # Módulo 3: Execução Comercial VTSD
-        └── StrategyCard.tsx       # Card expandível de estratégia
-```
+- `README.md` — setup técnico rápido
+- `ESTRATEGIA_MARKETING_VENDAS.md` — direção comercial do ciclo atual
+- `CHECKLIST_IMPLANTACAO_VPS.md` — implantação e homologação na VPS
+- `../Docs VTSD/00-Analise-Geral-VTSD-Operacao-Pascoa-Lucrativa.md` — leitura do projeto à luz do acervo VTSD
+- `../Docs VTSD/01-Posicionamento-Oferta-e-Mecanismo.md` — leitura de posicionamento e oferta
+- `../Docs VTSD/03-Fluxo-Comercial-e-Monetizacao.md` — leitura de fluxo comercial e monetização

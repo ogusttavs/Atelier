@@ -1,7 +1,7 @@
 # Checklist de Implantação na VPS — Atelier 21
 
 > Documento operacional para marcar com check durante a implantação.
-> Atualizado em 09/03/2026.
+> Atualizado em 10/03/2026 após homologação da produção.
 
 ---
 
@@ -119,9 +119,9 @@ Status atual:
 - [x] Verificar caminho do banco atual na VPS
 - [x] Verificar se a tabela `users` já existe
 - [x] Verificar schema atual da tabela `users`
-- [ ] Verificar se já existem compradoras cadastradas
-- [ ] Decidir se vamos:
-  - [ ] reutilizar o banco existente
+- [x] Verificar se já existem compradoras cadastradas
+- [x] Decidir se vamos:
+  - [x] reutilizar o banco existente
   - [ ] migrar o banco existente
   - [ ] criar um novo banco limpo
 
@@ -178,7 +178,7 @@ sqlite3 /caminho/para/atelier21.db "SELECT id, email, name, access_status, creat
 - [x] Rodar backend manualmente para teste inicial
 - [x] Validar `GET /api/health`
 - [x] Configurar backend para rodar com PM2 ou systemd
-- [ ] Confirmar reinício automático após reboot
+- [x] Salvar PM2 e habilitar serviço no boot
 
 Porta recomendada:
 
@@ -192,8 +192,8 @@ Motivo:
 
 - [x] `POST /api/auth/login`
 - [x] `POST /api/auth/verify`
-- [ ] `POST /api/admin/create-user`
-- [ ] `GET /api/admin/users`
+- [x] `POST /api/admin/create-user`
+- [x] `GET /api/admin/users`
 - [x] `POST /api/webhook/kiwify`
 
 ---
@@ -242,7 +242,7 @@ server {
 - [x] Confirmar URL final do checkout
 - [x] Confirmar que a LP está usando `VITE_KIWIFY_CHECKOUT_URL`
 - [x] Configurar webhook no painel da Kiwify
-- [ ] Confirmar token do webhook igual ao `.env`
+- [x] Validar token do webhook aceito pelo endpoint em produção
 - [x] Testar recebimento de evento `paid`
 - [x] Confirmar criação ou reativação da usuária no banco
 
@@ -287,29 +287,11 @@ Resultado atual da integração:
 Webhook em produção retornou: {"ok":true,"email_sent":true,"message":"Usuário criado com sucesso."}
 ```
 
-Próximos passos:
+Próximos passos externos:
 
 - conferir o email real na caixa de entrada
 - confirmar se o email foi para inbox principal, promoções ou spam
-
-O que publicar no DNS do domínio:
-
-- `MX` em `send` apontando para o host que a Resend mostrar no painel
-- `TXT` em `send` com o SPF que a Resend mostrar no painel
-- `CNAME` de DKIM no host `*_domainkey` que a Resend gerar
-- `CNAME` de DKIM no segundo host `*_domainkey` que a Resend gerar
-- `CNAME` de DKIM no terceiro host `*_domainkey` que a Resend gerar
-
-Checklist prático para publicar:
-
-- [ ] Entrar em `Domains` no painel da Resend
-- [ ] Adicionar `oatelier21.com.br`
-- [ ] Copiar os 5 registros gerados pela Resend
-- [ ] Publicar os 5 registros no DNS do domínio
-- [ ] Garantir que os valores de `MX` e `CNAME` terminem com ponto final se o painel DNS exigir
-- [ ] Clicar em `Verify DNS Records` no painel da Resend
-- [ ] Aguardar status `verified`
-- [ ] Repetir o teste de webhook para validar envio real
+- confirmar no painel da Kiwify que o token configurado lá é o mesmo já aceito pelo endpoint
 
 ---
 
@@ -318,7 +300,7 @@ Checklist prático para publicar:
 - [ ] Comprar pelo checkout real
 - [x] Confirmar disparo do webhook
 - [x] Confirmar criação da usuária no banco
-- [ ] Confirmar envio do email automático
+- [x] Confirmar envio do email automático
 - [x] Confirmar login com credenciais recebidas
 - [ ] Confirmar acesso à área de membros
 - [ ] Confirmar logout
@@ -331,14 +313,14 @@ Checklist prático para publicar:
 - [ ] Inserir prova social na LP
 - [ ] Inserir FAQ na LP
 - [ ] Instalar rastreamento de eventos
-- [ ] Monitorar logs do backend nos primeiros acessos
-- [ ] Fazer backup inicial do banco em produção
+- [x] Fazer inspeção inicial dos logs do backend
+- [x] Fazer backup inicial do banco em produção
 
 ---
 
 ## 10. Decisão final sobre o banco da VPS
 
-Estado atual: **banco criado no caminho final e pronto para uso**
+Estado atual: **banco criado no caminho final, com registros QA e pronto para uso**
 
 Decisão final:
 
@@ -348,4 +330,8 @@ Decisão final:
 
 Observação final:
 
-Não vou assumir criação de banco novo na VPS antes de inspecionar o arquivo atual. Esse é o ponto com maior risco de erro operacional agora.
+Backup inicial criado em:
+
+```text
+/var/www/atelier21/shared/atelier21.db.backup-20260310-181050
+```

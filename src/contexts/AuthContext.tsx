@@ -11,6 +11,8 @@ interface AuthContextType {
     isLoading: boolean;
     login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
+    requestAccess: (email: string) => Promise<{ success: boolean; error?: string; message?: string }>;
+    setupPassword: (email: string, token: string, password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -21,41 +23,33 @@ export function useAuth() {
     return context;
 }
 
-const API_TIMEOUT_MS = 3000;
+const API_TIMEOUT_MS = 5000;
 
-function getSavedSession() {
-    if (typeof window === 'undefined') {
-        return { savedToken: null, savedUser: null };
-    }
-
-    return {
-        savedToken: localStorage.getItem('atelier21_token'),
-        savedUser: localStorage.getItem('atelier21_user'),
-    };
-}
-
-async function tryApiLogin(email: string, password: string): Promise<{ token: string; user: User } | null> {
+async function tryApiLogin(email: string, password: string): Promise<User | null> {
     try {
         const res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
+            credentials: 'include',
             signal: AbortSignal.timeout(API_TIMEOUT_MS),
         });
 
         if (!res.ok) return null;
-        return await res.json() as { token: string; user: User };
+        const data = await res.json() as { user: User };
+        return data.user;
     } catch {
-        return null; // Backend offline → cai no modo demo
+        return null;
     }
 }
 
-async function tryApiVerify(token: string): Promise<User | null> {
+async function tryApiVerify(): Promise<User | null> {
     try {
         const res = await fetch('/api/auth/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token }),
+            body: '{}',
+            credentials: 'include',
             signal: AbortSignal.timeout(API_TIMEOUT_MS),
         });
 
@@ -67,33 +61,68 @@ async function tryApiVerify(token: string): Promise<User | null> {
     }
 }
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
+async function tryApiRequestAccess(email: string): Promise<{ error?: string; message?: string; ok: boolean }> {
+    try {
+        const res = await fetch('/api/auth/request-access', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+            credentials: 'include',
+            signal: AbortSignal.timeout(API_TIMEOUT_MS),
+        });
+
+        const data = await res.json() as { error?: string; message?: string; ok?: boolean };
+        if (!res.ok) {
+            return { ok: false, error: data.error || 'Nao foi possivel reenviar o acesso.' };
+        }
+
+        return { ok: true, message: data.message };
+    } catch {
+        return { ok: false, error: 'Nao foi possivel reenviar o acesso agora.' };
+    }
+}
+
+async function tryApiSetupPassword(email: string, token: string, password: string): Promise<{ user?: User; error?: string }> {
+    try {
+        const res = await fetch('/api/auth/setup-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, password }),
+            credentials: 'include',
+            signal: AbortSignal.timeout(API_TIMEOUT_MS),
+        });
+
+        const data = await res.json() as { error?: string; user?: User };
+        if (!res.ok) {
+            return { error: data.error || 'Nao foi possivel definir sua senha.' };
+        }
+
+        return { user: data.user };
+    } catch {
+        return { error: 'Nao foi possivel concluir a ativacao agora.' };
+    }
+}
+
+async function tryApiLogout(): Promise<void> {
+    try {
+        await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include',
+            signal: AbortSignal.timeout(API_TIMEOUT_MS),
+        });
+    } catch {
+        // O estado local ja e limpo mesmo se a requisicao falhar.
+    }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(() => {
-        const { savedToken, savedUser } = getSavedSession();
-        return Boolean(savedToken && savedUser);
-    });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const restore = async () => {
-            const { savedToken, savedUser } = getSavedSession();
-
-            if (!savedToken || !savedUser) {
-                setIsLoading(false);
-                return;
-            }
-
-            // Tenta validar o token no backend
-            const verified = await tryApiVerify(savedToken);
-
-            if (verified) {
-                setUser(verified);
-            } else {
-                localStorage.removeItem('atelier21_user');
-                localStorage.removeItem('atelier21_token');
-            }
-
+            const verified = await tryApiVerify();
+            setUser(verified);
             setIsLoading(false);
         };
 
@@ -102,27 +131,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const login = async (email: string, password: string): Promise<boolean> => {
         const emailNorm = email.toLowerCase().trim();
+        const apiUser = await tryApiLogin(emailNorm, password);
 
-        // 1. Tenta API real
-        const apiResult = await tryApiLogin(emailNorm, password);
-        if (apiResult) {
-            localStorage.setItem('atelier21_token', apiResult.token);
-            localStorage.setItem('atelier21_user', JSON.stringify(apiResult.user));
-            setUser(apiResult.user);
+        if (apiUser) {
+            setUser(apiUser);
             return true;
         }
 
         return false;
     };
 
+    const requestAccess = async (email: string) => {
+        const result = await tryApiRequestAccess(email.toLowerCase().trim());
+        return {
+            success: result.ok,
+            error: result.error,
+            message: result.message,
+        };
+    };
+
+    const setupPassword = async (email: string, token: string, password: string) => {
+        const result = await tryApiSetupPassword(email.toLowerCase().trim(), token, password);
+
+        if (result.user) {
+            setUser(result.user);
+            return { success: true };
+        }
+
+        return { success: false, error: result.error };
+    };
+
     const logout = () => {
-        localStorage.removeItem('atelier21_user');
-        localStorage.removeItem('atelier21_token');
+        void tryApiLogout();
         setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!user, user, isLoading, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!user, user, isLoading, login, logout, requestAccess, setupPassword }}>
             {children}
         </AuthContext.Provider>
     );

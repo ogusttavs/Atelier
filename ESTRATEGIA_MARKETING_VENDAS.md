@@ -1,507 +1,222 @@
 # Estratégia de Marketing e Vendas — Atelier 21
 
-> Baseado em `PROJETO.md` e na proposta atual da `SalesPage.tsx`
-> Data de referência: 09/03/2026
-> Janela principal de campanha: 09/03/2026 a 05/04/2026
+> Documento operacional do ciclo atual.
+> Atualizado em 10/03/2026 após homologação da produção e consolidação da leitura em `../Docs VTSD`.
 
 ---
 
-## 1. Objetivo
+## 1. Premissa do Ciclo Atual
 
-Transformar a **Operação Páscoa Lucrativa** em uma oferta de compra por impulso, com comunicação direta de resultado:
+A **Operação Páscoa Lucrativa** deve ser tratada como:
 
-**"Aprenda o que vender, quanto cobrar e como fechar encomendas nesta Páscoa, mesmo começando do zero."**
+- produto **low ticket**
+- venda por **conversão direta**
+- infraestrutura **perpétua**
+- operação comercial em **pico sazonal de Páscoa**
 
-O foco do marketing não deve ser "ensinar confeitaria" de forma genérica. O foco deve ser **vender uma solução rápida para gerar renda com doces artesanais**, reduzindo três medos centrais da cliente:
-
-- Não saber o que vender
-- Ter prejuízo por precificar errado
-- Não conseguir clientes
-
----
-
-## 2. Direção Estratégica
-
-### Decisão central
-
-O produto deve ser comunicado como um **kit de lucro para a Páscoa**, e não como um curso tradicional.
-
-### Promessa principal
-
-Com um investimento baixo, a cliente recebe um caminho prático para:
-
-- montar um cardápio com produtos de alta saída
-- precificar sem perder dinheiro
-- aplicar ações simples de venda no WhatsApp, Instagram e no bairro
-
-### Mecanismo único da oferta
-
-O diferencial do Atelier 21 não é apenas ensinar receita. O diferencial é o tripé:
-
-- **Cardápio lucrativo**
-- **Precificação automática**
-- **Vendas aplicáveis no mundo real**
-
-Essa é a base de toda copy, anúncio, página, criativo e conteúdo.
+O objetivo agora não é expandir a esteira. O objetivo é fazer o ciclo principal vender de forma previsível.
 
 ---
 
-## 3. Público Prioritário
+## 2. Posicionamento Comercial
 
-Embora o projeto fale com três personas, o marketing de aquisição deve priorizar **uma persona principal** para evitar mensagem genérica demais.
+### O que estamos vendendo de verdade
+
+Não estamos vendendo um curso genérico de confeitaria.
+
+Estamos vendendo um caminho mais claro para:
+- decidir o cardápio
+- cobrar sem sair no prejuízo
+- abrir as encomendas com menos improviso
+
+### Frase-mãe da oferta
+
+**Use a Páscoa para faturar com mais clareza no produto, no preço e na venda.**
+
+### Leitura prática do mecanismo atual
+
+O mecanismo do Atelier hoje é a combinação de:
+- cardápio comercial
+- precificação aplicada
+- execução de vendas
+
+Se a comunicação fugir desse tripé, a oferta perde força.
+
+---
+
+## 3. Persona Prioritária
 
 ### Persona principal
 
-**Mulher de 25 a 45 anos que precisa de renda extra rápida, cozinha em casa, usa Instagram e WhatsApp todos os dias e quer aproveitar a Páscoa para vender.**
+Mulher que quer usar a Páscoa para gerar renda rápida, mas trava porque:
+- não sabe o que vender
+- tem medo de cobrar errado
+- não sabe como abrir as encomendas
 
 ### Personas secundárias
 
-- Mães e donas de casa que querem uma renda sem sair de casa
-- Confeiteiras que já produzem, mas travam em preço, oferta e vendas
+- mães e donas de casa buscando renda em casa
+- confeiteiras que já produzem, mas ainda travam no comercial
 
-### Dor dominante
+### Erro a evitar
 
-Ela não quer "aprender confeitaria". Ela quer **faturar sem errar**.
-
----
-
-## 4. Posicionamento de Vendas
-
-### Frase-mãe da marca
-
-**Atelier 21 ensina a fazer e vender doces no século 21.**
-
-### Tradução comercial da frase
-
-O Atelier 21 ajuda mulheres comuns a transformar doces artesanais em renda real com estratégia, precificação e vendas.
-
-### Território da marca
-
-- Prático
-- Direto
-- Lucrativo
-- Aplicável
-- Atual
-
-### O que evitar na comunicação
-
-- Falar como escola de confeitaria tradicional
-- Postar conteúdo bonito, mas sem CTA de venda
-- Focar só em receitas sem conectar com margem, encomenda e lucro
-- Fazer posts motivacionais genéricos sem oferta clara
+Falar com três públicos ao mesmo tempo em todas as peças. A aquisição deve falar primeiro com a dor mais urgente: **faturar nesta Páscoa sem errar no caminho**.
 
 ---
 
-## 5. Estrutura da Oferta
+## 4. Funil Principal
 
-### Oferta principal
+### Fluxo recomendado
 
-**Operação Páscoa Lucrativa**
+`Reels / Stories / WhatsApp -> LP -> Checkout Kiwify -> Webhook -> Email -> Login`
 
-- 15 receitas com apelo comercial
-- calculadora de precificação
-- manual com 20 estratégias de vendas
-- acesso vitalício
-- preço de entrada: **R$ 49,90**
-- âncora: **R$ 197,00**
+### Papel de cada etapa
 
-### Como a oferta deve ser percebida
+- **Conteúdo:** chamar atenção e aquecer a decisão
+- **LP:** organizar promessa, entregar clareza e empurrar para compra
+- **Checkout:** decisão final
+- **Webhook + email + login:** garantir entrega imediata
+- **WhatsApp:** apoiar dúvidas e recuperar interesse quente
 
-O produto precisa parecer barato demais para a transformação entregue. A lógica é:
+### O que não deve virar prioridade agora
 
-**"Se uma única venda já paga o produto, a compra faz sentido imediato."**
+- order bump como dependência da oferta
+- upsell como condição de viabilidade
+- comunidade
+- recorrência
+- expansão para muitas sazonalidades ao mesmo tempo
 
-### Elementos que mais ajudam a converter
-
-- reforço de que o valor se paga com uma venda
-- destaque para lucro e margem, não só para sabor e estética
-- prova social
-- garantia de 7 dias
-- urgência sazonal da Páscoa
-
-### Bônus recomendados para aumentar conversão
-
-Esses bônus são simples de produzir e aumentam percepção de valor:
-
-- roteiro de Stories para vender por WhatsApp
-- mensagens prontas para responder clientes e fechar encomendas
-- checklist "7 dias para abrir as encomendas de Páscoa"
+Esses pontos entram depois da primeira validação real.
 
 ---
 
-## 6. Mensagens-Chave da Copy
+## 5. Mensagem Central da Copy
 
-### Big idea
+### Tese principal
 
-**A maioria erra na Páscoa porque escolhe o produto errado, cobra errado e posta sem estratégia.**
+**A maioria trava na Páscoa porque decide mal o produto, cobra no chute e divulga sem plano.**
 
-### Promessas que devem aparecer com frequência
+### Promessas que precisam aparecer com frequência
 
-- venda mesmo começando do zero
-- descubra o que realmente dá lucro
-- cobre o preço certo sem medo
-- use WhatsApp e Instagram para fechar encomendas
-- transforme a Páscoa em uma janela de faturamento rápido
+- escolher o que vender com mais segurança
+- cobrar sem prejuízo
+- vender mesmo começando do zero
+- usar Instagram e WhatsApp para abrir encomendas
+- entrar na data com mais clareza e menos improviso
 
-### Provas que precisam sustentar a promessa
+### O que a copy precisa evitar
 
-- exemplos de margem por produto
-- comparação entre custo e preço de venda
-- demonstração da calculadora funcionando
-- bastidores do conteúdo por dentro da área de membros
-- depoimentos e prints de resultados assim que disponíveis
-
-### Headlines recomendadas
-
-- **Venda doces na Páscoa sem adivinhar o que fazer, quanto cobrar e como conseguir clientes**
-- **O guia prático para lucrar com ovos, trufas e kits de Páscoa mesmo começando do zero**
-- **Pare de cozinhar no escuro: aprenda o que vender, precificar e divulgar para faturar nesta Páscoa**
+- prometer confeitaria avançada como foco principal
+- abrir muitas promessas paralelas de ano todo
+- centralizar a comunicação em tendência sem amarrar lucro
+- falar mais de estética do que de dinheiro e execução
 
 ---
 
-## 7. Funil Comercial
+## 6. Pilares de Conteúdo
 
-### 7.1. Funil principal
+Todo conteúdo precisa empurrar para uma ação simples: clicar, responder, chamar no WhatsApp ou comprar.
 
-**Conteúdo curto -> Página de vendas -> Checkout Kiwify -> Área de membros -> Prova social -> Novas vendas**
-
-### Objetivo do conteúdo
-
-Gerar desejo, reduzir objeção e levar para a página ou para o WhatsApp.
-
-### Objetivo da página
-
-Converter interesse em compra com clareza, prova e urgência.
-
-### Objetivo do pós-compra
-
-Entregar acesso rápido e transformar compradoras em novas provas sociais.
-
-### 7.2. Funil de aquecimento
-
-**Conteúdo -> DM/WhatsApp -> esclarecimento rápido -> checkout**
-
-Esse funil é importante porque parte do público compra melhor depois de uma conversa curta.
-
-### Canais prioritários
-
-- Instagram Reels
-- Instagram Stories
-- WhatsApp Status
-- TikTok com reaproveitamento dos vídeos
-
-### 7.3. Funil de remarketing
-
-**Visitou a página e não comprou -> anúncio de prova/urgência -> retorno ao checkout**
-
-Esse funil só deve ganhar força depois que houver:
-
-- checkout real configurado
-- pixel instalado
-- primeiras provas sociais
-
----
-
-## 8. Canais Prioritários
-
-### 1. Instagram
-
-Canal principal de aquisição e relacionamento.
-
-Tipos de conteúdo:
-
-- Reels com gancho forte nos primeiros 2 segundos
-- carrosséis com erro -> solução -> CTA
-- Stories com prova, bastidor, enquete e chamada para compra
-
-### 2. WhatsApp
-
-Canal principal de conversão quente.
-
-Usos:
-
-- Status com oferta diária
-- listas de transmissão
-- resposta rápida para dúvidas
-- fechamento de encomendas e do infoproduto
-
-### 3. TikTok
-
-Canal de alcance e descoberta.
-
-Usar os mesmos pilares do Instagram, com edição mais direta e informal.
-
-### 4. Tráfego pago
-
-Usar com cautela no início. Como o ticket é baixo e ainda não há esteira de upsell, o pago deve priorizar:
-
-- remarketing
-- criativos com prova
-- orçamento controlado
-
-Não faz sentido depender de tráfego frio como canal principal antes de validar conversão da página.
-
----
-
-## 9. Pilares de Conteúdo Focados em Venda
-
-Todo conteúdo deve terminar em uma das seguintes ações:
-
-- clicar no link da bio
-- responder uma palavra na DM
-- chamar no WhatsApp
-- entrar no checkout
-
-### Pilar 1. Lucro
-
-Mostrar o que vende, margem, custo e preço.
+### Pilar 1 — Lucro e clareza
 
 Exemplos:
+- quanto custa e quanto pode vender
+- erros de precificação
+- o que entra no cardápio e o que sai
 
-- "Esse ovo custa X e pode vender por Y"
-- "3 doces com maior margem nesta Páscoa"
-- "Quanto cobrar para não trabalhar de graça"
-
-### Pilar 2. Erros
-
-Mostrar o que faz a confeiteira perder dinheiro.
+### Pilar 2 — Problema x solução
 
 Exemplos:
+- "não sei o que vender"
+- "tenho medo de cobrar barato"
+- "posto e não sinto que sei vender"
 
-- "3 erros que fazem você ter prejuízo na Páscoa"
-- "Por que seu ovo é bonito, mas não vende"
-- "O erro de precificação que mata seu lucro"
-
-### Pilar 3. Facilidade
-
-Reduzir a crença de que é difícil começar.
+### Pilar 3 — Bastidor e prova
 
 Exemplos:
-
-- "Como começar vendendo em casa"
-- "O que fazer primeiro para abrir encomendas"
-- "Dá para começar com poucos produtos"
-
-### Pilar 4. Prova
-
-Mostrar a área de membros, a calculadora, a estrutura e depois os resultados das alunas.
-
-Exemplos:
-
+- tela da calculadora
 - tour pela área de membros
-- vídeo da calculadora em uso
-- print de aluna ou compradora satisfeita
+- bastidor do módulo de vendas
+- prints e resultados assim que existirem
 
-### Pilar 5. Urgência sazonal
-
-Lembrar que Páscoa tem data e a janela de venda é curta.
+### Pilar 4 — Urgência natural da data
 
 Exemplos:
-
-- "Quem esperar demais vai vender em cima da hora"
-- "Faltam poucos dias para abrir encomendas com estratégia"
-- "A melhor semana para captar pedidos é antes do pico"
-
----
-
-## 10. Estrutura de Conteúdo Semanal
-
-Modelo recomendado por semana:
-
-- 3 Reels de dor + solução
-- 2 Reels de prova + oferta
-- 2 carrosséis com erros, lucro ou precificação
-- Stories diários com CTA
-- 2 blocos de WhatsApp Status por dia
-
-### Fórmula simples para os Stories
-
-- dor do público
-- prova ou bastidor
-- oferta
-- CTA direto
-
-Exemplo de CTA:
-
-**"Se você quer vender na Páscoa sem errar no preço, me chama com a palavra PASCOA."**
+- abertura de encomendas
+- janela curta da Páscoa
+- reta final
+- capacidade limitada de produção
 
 ---
 
-## 11. Ajustes Recomendados na Página de Vendas
+## 7. Prioridades de Conversão na LP
 
-O produto já tem uma base boa, mas para vender mais a página precisa reforçar prova e conversão.
+### O que já existe
 
-### Prioridade alta
+- headline e subheadline orientadas à dor
+- explicação da oferta
+- blocos de público
+- detalhamento dos módulos
+- FAQ estrutural
+- preço, garantia e CTA
 
-- inserir depoimentos e prints assim que existirem
-- adicionar FAQ com objeções reais
-- mostrar a área de membros por dentro
-- reforçar visualmente que uma venda paga o produto
-- repetir CTA em todos os blocos decisivos
+### O que precisa ganhar prioridade
 
-### Prioridade média
+1. prova social real
+2. objeções reais vindas de leads e compradoras
+3. bastidores do produto em uso
+4. reforço visual de que uma venda pode pagar o produto
 
-- incluir seção "para quem não é"
-- incluir seção "o que acontece se você não agir agora"
-- testar headline mais agressiva em lucro e renda extra
+### Leitura prática
 
-### Prioridade técnica
-
-- configurar o checkout real da Kiwify
-- instalar rastreamento de eventos
-- preparar recuperação de abandono por remarketing
+A página já tem estrutura. O que falta agora é **densidade comercial real**.
 
 ---
 
-## 12. Ativos de Marketing a Criar
+## 8. Próxima Etapa
 
-Para operar focado em vendas, os próximos ativos devem ser produzidos nesta ordem:
+### Etapa imediata
 
-### 1. Prova
+**Operar marketing, captação de prova e refinamento de conversão.**
 
-- 5 a 10 depoimentos iniciais
-- prints de mensagens
-- vídeo curto mostrando a plataforma
+### Ordem de execução
 
-### 2. Criativos
+1. colocar conteúdo com CTA em ritmo constante
+2. empurrar para LP e WhatsApp
+3. registrar dúvidas repetidas, prints e respostas
+4. transformar esse material em prova social, FAQ e criativos
+5. intensificar urgência natural da data conforme a janela de Páscoa encurta
 
-- 10 ganchos de Reels
-- 5 vídeos mostrando lucro por produto
-- 5 vídeos de objeção e quebra de medo
+### Resultado esperado
 
-### 3. Conversão
+Ao fim dessa etapa, o projeto precisa sair de:
 
-- FAQ comercial
-- sequência de Stories de venda
-- mensagens prontas de DM e WhatsApp
+`produção pronta`
 
-### 4. Automação
+para:
 
-- email de boas-vindas pós-compra
-- evento de purchase
-- evento de begin_checkout
+`oferta com prova, objeções mapeadas e conversão mais forte`
 
 ---
 
-## 13. Calendário de Execução
+## 9. Depois da Primeira Tração
 
-### Fase 1. Base de conversão
+Só depois de ganhar prova e consistência entram:
 
-**09/03/2026 a 15/03/2026**
-
-- finalizar checkout real
-- publicar o posicionamento principal
-- criar os primeiros criativos com foco em lucro
-- preparar FAQ e bastidores da área de membros
-
-### Fase 2. Aquecimento e prova
-
-**16/03/2026 a 22/03/2026**
-
-- intensificar Reels e Stories
-- levar tráfego para página e WhatsApp
-- captar dúvidas reais do público
-- começar a organizar provas e prints
-
-### Fase 3. Conversão forte
-
-**23/03/2026 a 29/03/2026**
-
-- abrir comunicação diária com urgência
-- destacar que a Páscoa está próxima
-- reforçar preço, garantia e acesso imediato
-- usar mais CTA para compra direta
-
-### Fase 4. Fechamento
-
-**30/03/2026 a 05/04/2026**
-
-- campanha diária de escassez e urgência
-- prova social em ritmo alto
-- destaque para "últimos dias para aplicar"
-- remarketing para visitantes e engajados
+1. mensagens curtas de WhatsApp para recuperação
+2. pico sazonal mais agressivo
+3. pre-checkout e recuperação estruturada
+4. order bump
+5. upsell
+6. produto de continuidade pós-Páscoa
 
 ---
 
-## 14. Métricas de Controle
+## 10. Referências Internas
 
-As métricas não podem ser apenas de vaidade. O foco é venda.
+Para a leitura detalhada que embasa esta estratégia:
 
-### Métricas principais
-
-- visitas na página de vendas
-- taxa de clique nos CTAs
-- taxa de conversão para compra
-- custo por compra
-- volume de conversas no WhatsApp/DM
-- faturamento diário
-
-### Sinais de alerta
-
-- muito alcance e pouco clique: gancho chama atenção, mas CTA está fraco
-- muito clique e pouca compra: página ou checkout não estão convencendo
-- muita dúvida repetida: falta clareza na oferta
-- muito interesse e pouco fechamento: falta prova social ou urgência
-
----
-
-## 15. Regras Para Manter Tudo Focado em Vendas
-
-- toda peça precisa ter CTA claro
-- toda copy precisa conectar produto com lucro
-- toda postagem precisa atacar uma objeção, uma dor ou um desejo
-- toda melhoria no site precisa aumentar confiança ou conversão
-- toda campanha deve ter objetivo comercial, não apenas alcance
-
-Se uma ação não aproxima a cliente da compra, ela não é prioridade agora.
-
----
-
-## 16. Próximas Prioridades do Projeto
-
-### Prioridade 1
-
-Tornar a compra possível e rastreável:
-
-- configurar Kiwify
-- configurar webhook
-- configurar email pós-compra
-
-### Prioridade 2
-
-Aumentar conversão:
-
-- prova social
-- FAQ
-- bastidores da área de membros
-- criativos com foco em lucro
-
-### Prioridade 3
-
-Preparar escala:
-
-- pixels e eventos
-- remarketing
-- biblioteca de criativos vencedores
-
----
-
-## 17. Resumo Executivo
-
-A estratégia correta para o Atelier 21 é simples:
-
-**Não vender um curso. Vender uma oportunidade prática de faturamento na Páscoa.**
-
-O marketing deve martelar sempre a mesma tese:
-
-- existe demanda
-- existe margem
-- existe um método simples
-- o produto entrega esse método por um valor baixo
-
-Se a comunicação mantiver esse foco, a oferta tende a converter bem porque une:
-
-- urgência sazonal
-- promessa financeira
-- ticket acessível
-- aplicação imediata
+- `../Docs VTSD/00-Analise-Geral-VTSD-Operacao-Pascoa-Lucrativa.md`
+- `../Docs VTSD/01-Posicionamento-Oferta-e-Mecanismo.md`
+- `../Docs VTSD/03-Fluxo-Comercial-e-Monetizacao.md`
+- `PROJETO.md`
