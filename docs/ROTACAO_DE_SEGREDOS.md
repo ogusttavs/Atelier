@@ -25,9 +25,15 @@ Segredos usados em producao:
 
 - `JWT_SECRET`: assina a sessao
 - `LEGACY_PASSWORD_SECRET`: mantem compatibilidade com senhas antigas
-- `ADMIN_SECRET`: protege rotas admin
+- `ADMIN_SECRET`: protege rotas tecnicas internas de admin
 - `KIWIFY_WEBHOOK_TOKEN`: protege o webhook
 - `RESEND_API_KEY`: autoriza envio de email
+
+Observacao:
+
+- o acesso normal ao painel `/admin` nao usa mais `ADMIN_SECRET`
+- o painel agora envia um codigo temporario para `ADMIN_EMAIL`
+- `ADMIN_SECRET` continua relevante para rotas internas e operacao tecnica
 
 ## Nao Reutilizar Os Valores Atuais
 
@@ -38,7 +44,7 @@ Para evitar repetir exatamente os mesmos valores, use estes fingerprints como re
 - `JWT_SECRET` atual: comeca com `25f7628d` e termina com `196213`
 - `LEGACY_PASSWORD_SECRET` atual: igual ao `JWT_SECRET` antigo, comeca com `25f7628d` e termina com `196213`
 - `ADMIN_SECRET` atual: comeca com `848295fc` e termina com `523758`
-- `KIWIFY_WEBHOOK_TOKEN` atual: comeca com `9b2e75a8` e termina com `87155fa`
+- `KIWIFY_WEBHOOK_TOKEN` atual: comeca com `paqra` e termina com `uuamp`
 - `RESEND_API_KEY` atual: comeca com `re_YCAp` e termina com `fWMbT`
 
 Se o novo segredo comecar e terminar igual a algum item acima, descarte e gere outro.

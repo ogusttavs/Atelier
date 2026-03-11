@@ -1,6 +1,8 @@
 import {Suspense, startTransition, useEffect, useState} from 'react';
 import {AuthProvider, useAuth} from './contexts/AuthContext';
+import EasterCountdownBar from './components/EasterCountdownBar';
 import SalesPage from './components/SalesPage';
+import {trackMetaPageView} from './lib/metaPixel';
 import {lazyWithPreload} from './utils/lazyWithPreload';
 
 const KIWIFY_CHECKOUT_URL = import.meta.env.VITE_KIWIFY_CHECKOUT_URL || 'https://pay.kiwify.com.br/avY1khc';
@@ -45,6 +47,7 @@ function PageLoader() {
 function AppContent() {
   const {isAuthenticated, isLoading, logout} = useAuth();
   const [view, setView] = useState<View>(() => getViewFromPath(window.location.pathname));
+  const showCountdown = view !== 'admin';
 
   const navigateTo = (nextView: View, replace = false) => {
     const nextPath = getPathForView(nextView);
@@ -73,26 +76,8 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
-    const preloadSecondaryRoutes = () => {
-      AdminDashboardPage.preload();
-      LoginPage.preload();
-      ThankYouPage.preload();
-
-      if (isAuthenticated) {
-        MemberArea.preload();
-      }
-    };
-
-    const requestIdle = window.requestIdleCallback?.bind(window);
-    const cancelIdle = window.cancelIdleCallback?.bind(window);
-
-    if (requestIdle && cancelIdle) {
-      const idleId = requestIdle(preloadSecondaryRoutes, {timeout: 1200});
-      return () => cancelIdle(idleId);
-    }
-
-    const timeoutId = window.setTimeout(preloadSecondaryRoutes, 600);
-    return () => window.clearTimeout(timeoutId);
+    if (!isAuthenticated) return;
+    MemberArea.preload();
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -115,6 +100,10 @@ function AppContent() {
       window.history.replaceState({}, '', resolvedPath);
     }
   }, [isAuthenticated, isLoading]);
+
+  useEffect(() => {
+    trackMetaPageView();
+  }, [view]);
 
   const goToLogin = () => navigateTo('login');
   const preloadLogin = () => {
@@ -140,6 +129,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-[#FFF5F7] text-[#4A3338] font-sans selection:bg-[#E295A3] selection:text-white">
+      {showCountdown && <EasterCountdownBar />}
       {view === 'sales' && (
         <SalesPage
           onBuy={handleBuy}

@@ -669,7 +669,7 @@ app.post('/api/auth/verify', verifyLimiter, (req, res) => {
 
   if (!token) {
     clearSessionCookie(res);
-    return res.status(401).json({ valid: false, error: 'Sessão não encontrada.' });
+    return res.json({ valid: false });
   }
 
   try {
@@ -680,14 +680,13 @@ app.post('/api/auth/verify', verifyLimiter, (req, res) => {
 
     if (!user || user.access_status !== 'active') {
       clearSessionCookie(res);
-      return res.status(401).json({ valid: false, error: 'Acesso não encontrado ou inativo.' });
+      return res.json({ valid: false });
     }
 
     return res.json({ valid: true, user: { email: user.email, name: user.name } });
   } catch (error: unknown) {
     clearSessionCookie(res);
-    const message = error instanceof Error ? error.message : 'Token inválido';
-    return res.status(401).json({ valid: false, error: message });
+    return res.json({ valid: false });
   }
 });
 

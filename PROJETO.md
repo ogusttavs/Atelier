@@ -1,7 +1,7 @@
 # Operação Páscoa Lucrativa — Atelier 21
 
 > Documento mestre do projeto.
-> Última atualização: 10/03/2026 — revisão geral do produto, da estratégia e da próxima etapa.
+> Última atualização: 11/03/2026 — revisão do estado real da aplicação, da prontidão comercial e do lançamento.
 
 ---
 
@@ -17,13 +17,22 @@
 
 **Modelo operacional atual:** produto perpétuo na infraestrutura, com campanha comercial sazonal de Páscoa.
 
-**Status real do projeto em 10/03/2026:**
+**Status real do projeto em 11/03/2026:**
 - produto e área de membros implementados
+- LP, login, área de membros e página de obrigado implementados
+- suporte oficial unificado em `suporte@oatelier21.com.br`
+- painel admin em `/admin` com login por código enviado ao email administrativo e atualização em tempo real
 - produção homologada no servidor com domínio, Nginx, PM2, banco e API pública ativos
+- checagem externa do dia: `https://oatelier21.com.br` respondeu `200 OK` e `/api/health` retornou `{"status":"ok"}`
 - login, `verify`, rotas admin, webhook e envio aceito pela Resend testados em produção
+- FAQ estrutural já implementada na sales page
+- rastreamento explícito no frontend hoje confirma `PageView` do Meta Pixel em produção; `ViewContent`, `InitiateCheckout`, `AddToCart` e `Purchase` ainda precisam ser validados no ecossistema Meta/Kiwify
 - backup inicial do banco criado em `/var/www/atelier21/shared/atelier21.db.backup-20260310-181050`
+- `robots.txt` e `sitemap.xml` reais publicados
+- cache estático longo habilitado no Nginx para assets versionados
+- auditoria Lighthouse pós-otimização apontou `Performance 87`, `Accessibility 100`, `Best Practices 81` e `SEO 100`
 
-**Próxima etapa recomendada:** sair da infraestrutura e entrar em operação de marketing, usando o fluxo já homologado para captar prova social, objeções reais e melhorar conversão.
+**Próxima etapa recomendada:** validar o funil comercial real de ponta a ponta e publicar a aquisição com estrutura enxuta, usando o fluxo já homologado para captar prova social, objeções reais e melhorar conversão.
 
 ---
 
@@ -93,15 +102,18 @@ A cliente não quer só aprender confeitaria. Ela quer **transformar doce em din
 - landing page em `/`
 - login em `/login`
 - área de membros em `/member`
+- painel admin em `/admin`
 - navegação client-side com fallback para login ou membro conforme autenticação
 - lazy loading dos módulos de login e membros
+- countdown sazonal no topo das rotas públicas
+- página de obrigado com reenvio de acesso e apoio de suporte
 
 ### Conteúdo implementado
 
 - `EasterGuide.tsx`: módulo com 15 produtos
 - `PricingCalculator.tsx`: calculadora interativa
 - `SalesStrategies.tsx`: bloco comercial sazonal + continuidade
-- `SalesPage.tsx`: página de vendas com oferta, FAQ, garantia e CTAs
+- `SalesPage.tsx`: página de vendas com oferta, FAQ estrutural, garantia, CTAs e sticky checkout
 
 ### Backend implementado
 
@@ -125,9 +137,23 @@ A cliente não quer só aprender confeitaria. Ela quer **transformar doce em din
 - provider atual: Resend via API HTTP
 - envio depende de `RESEND_API_KEY` e remetente válido
 
+### Rastreamento e mensuração
+
+- `src/lib/metaPixel.ts`: inicialização do Meta Pixel em produção e disparo explícito de `PageView`
+- o repositório atual não comprova, por código, disparos explícitos de `ViewContent`, `InitiateCheckout`, `AddToCart` ou `Purchase`
+- esses eventos continuam como validação operacional obrigatória antes de escalar tráfego pago
+
+### Performance e entrega web
+
+- hero da LP foi otimizado com imagens separadas para mobile e desktop
+- imagem remota da oferta foi internalizada como asset local
+- assets estáticos agora saem com cache longo via Nginx
+- `robots.txt` e `sitemap.xml` foram publicados para indexação correta
+- o app reduziu LCP mobile de uma faixa crítica para `3.1s` na medição mais recente feita em 11/03/2026
+
 ### Verificação técnica mais recente
 
-Em 10/03/2026, `npm run build` passou com sucesso.
+Em 11/03/2026, `npm run build` passou com sucesso.
 
 ---
 
@@ -138,10 +164,15 @@ Em 10/03/2026, `npm run build` passou com sucesso.
 | Domínio + HTTPS | online | `oatelier21.com.br` já responde |
 | Frontend | publicado | servido via Nginx |
 | Backend | publicado | rodando via PM2 na porta `3010` |
+| API pública | respondendo | `GET /api/health` retornou `ok` em 11/03/2026 |
 | Banco | criado | SQLite em `/var/www/atelier21/shared/atelier21.db` |
-| Checkout | pronto no app | falta apenas confirmação via compra real no checkout oficial |
+| Checkout | pronto no app | falta confirmação via compra real no checkout oficial |
 | Webhook | homologado | evento QA `paid` criou acesso com sucesso |
 | Email de acesso | homologado | Resend aceitou envio em produção (`email_sent: true`) |
+| Suporte humano | ativo | `suporte@oatelier21.com.br` criado na Hostinger |
+| Painel admin | publicado | `/admin` com código por email e stream em tempo real |
+| Pixel Meta | parcial | `PageView` explícito no código; eventos de funil ainda exigem validação externa |
+| PageSpeed | melhorado | cache estático, imagens otimizadas e `robots.txt` real já em produção |
 
 ---
 
@@ -151,14 +182,21 @@ Em 10/03/2026, `npm run build` passou com sucesso.
 
 - estrutura de oferta em 3 módulos
 - LP pública por HTTPS
+- FAQ estrutural na LP
 - backend e autenticação reais
 - `POST /api/auth/login`
 - `POST /api/auth/verify`
 - `POST /api/admin/create-user`
 - `GET /api/admin/users`
+- `GET /api/health`
 - `POST /api/webhook/kiwify`
 - criação de acesso com `access_status = active`
 - envio aceito pela Resend
+- `PageView` da Meta implementado no frontend para hosts de produção
+- domínio principal respondendo em produção
+- `/admin` com login por código no email administrativo
+- atualização em tempo real do painel administrativo
+- `robots.txt` válido em produção
 - build de produção
 - backup inicial do banco
 
@@ -166,6 +204,7 @@ Em 10/03/2026, `npm run build` passou com sucesso.
 
 - compra real pelo checkout oficial da Kiwify
 - recebimento do email em uma caixa de entrada real
+- validação operacional de `ViewContent`, `AddToCart`, `InitiateCheckout` e `Purchase`
 - coleta de prova social real
 - coleta de objeções reais para LP e WhatsApp
 
@@ -180,7 +219,8 @@ O projeto **não está travado por produto**. Ele já tem:
 - fluxo técnico de acesso pronto
 
 O maior risco atual está em dois pontos:
-- **conversão**, porque a LP ainda depende mais de estrutura do que de prova social e objeções reais
+- **conversão**, porque a LP já tem estrutura e FAQ, mas ainda depende de prova social e objeções reais
+- **mensuração**, porque o `PageView` está explícito no código, mas os eventos de fundo de funil ainda precisam ser confirmados no stack Meta/Kiwify
 - **operação comercial**, porque agora o gargalo sai da tecnologia e passa para aquisição, mensagem e volume de testes
 
 Também existe um ponto de foco:
@@ -196,11 +236,12 @@ Também existe um ponto de foco:
 
 ### Ordem recomendada
 
-1. começar tráfego de conteúdo e aquisição com CTA para LP e WhatsApp
-2. captar prints, dúvidas e objeções de leads e compradoras
-3. inserir prova social real na LP
-4. transformar objeções reais em FAQ, Stories e mensagens de apoio
-5. organizar um pico sazonal mais agressivo conforme a janela de Páscoa encurta
+1. validar checkout, email real e eventos do funil antes de abrir a torneira
+2. publicar a campanha principal com estrutura enxuta e verba controlada
+3. captar prints, dúvidas e objeções de leads e compradoras
+4. inserir prova social real na LP
+5. transformar objeções reais em Stories, mensagens de apoio e refinamento de FAQ
+6. organizar um pico sazonal mais agressivo conforme a janela de Páscoa encurta
 
 ### Por que essa é a próxima etapa
 
@@ -211,7 +252,7 @@ Porque o lado técnico deixou de ser o gargalo. O projeto já consegue:
 - validar login
 - enviar email
 
-Agora o crescimento depende de marketing, prova e refinamento de mensagem.
+Agora o crescimento depende de validação comercial real, mensuração confiável, prova e refinamento de mensagem.
 
 ---
 
@@ -250,7 +291,10 @@ O login depende do backend e do banco ativos.
 
 - `README.md` — setup técnico rápido
 - `ESTRATEGIA_MARKETING_VENDAS.md` — direção comercial do ciclo atual
+- `../Estrategias/CHECKLIST_FINAL_LANCAMENTO_2026-03-11.md` — checklist operacional final do lançamento de hoje
 - `CHECKLIST_IMPLANTACAO_VPS.md` — implantação e homologação na VPS
+- `docs/ROTACAO_DE_SEGREDOS.md` — rotação operacional dos segredos
+- `docs/SEGURANCA_EXPLICADA_COMO_PARA_UMA_CRIANCA.md` — explicação simples da segurança atual
 - `../Docs VTSD/00-Analise-Geral-VTSD-Operacao-Pascoa-Lucrativa.md` — leitura do projeto à luz do acervo VTSD
 - `../Docs VTSD/01-Posicionamento-Oferta-e-Mecanismo.md` — leitura de posicionamento e oferta
 - `../Docs VTSD/03-Fluxo-Comercial-e-Monetizacao.md` — leitura de fluxo comercial e monetização

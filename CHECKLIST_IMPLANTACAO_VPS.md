@@ -1,7 +1,7 @@
 # Checklist de Implantação na VPS — Atelier 21
 
 > Documento operacional para marcar com check durante a implantação.
-> Atualizado em 10/03/2026 após homologação da produção.
+> Atualizado em 11/03/2026 após homologação, painel admin por email, suporte oficial e otimizações de performance.
 
 ---
 
@@ -38,13 +38,21 @@ Conclusão operacional:
 ## 2. Variáveis de ambiente da produção
 
 - [x] Configurar `VITE_KIWIFY_CHECKOUT_URL`
+- [x] Configurar `VITE_SUPPORT_EMAIL`
+- [x] Configurar `VITE_ADMIN_EMAIL`
+- [x] Configurar `VITE_META_PIXEL_ID`
 - [x] Configurar `JWT_SECRET`
+- [x] Configurar `LEGACY_PASSWORD_SECRET`
 - [x] Configurar `KIWIFY_WEBHOOK_TOKEN`
 - [x] Configurar `FRONTEND_URL`
 - [x] Configurar `APP_LOGIN_URL`
 - [x] Configurar `RESEND_API_KEY`
 - [x] Configurar `RESEND_FROM_EMAIL`
+- [x] Configurar `SUPPORT_EMAIL`
 - [x] Configurar `ADMIN_SECRET`
+- [x] Configurar `ADMIN_EMAIL`
+- [x] Configurar `BACKUP_DIR`
+- [x] Configurar `BACKUP_RETENTION_DAYS`
 
 Observação:
 
@@ -206,6 +214,8 @@ Motivo:
 - [x] Configurar proxy `/api` para `127.0.0.1:3010`
 - [x] Configurar rewrite de SPA para `/login`
 - [x] Configurar rewrite de SPA para `/member`
+- [x] Garantir `robots.txt` e `sitemap.xml` reais em produção
+- [x] Aplicar cache longo para assets estáticos no Nginx
 - [x] Garantir que assets estáticos carregam corretamente
 
 ### Regra importante
@@ -268,9 +278,12 @@ Status:
 - o webhook segue criando usuária normalmente no banco com `access_status = active`
 - a rota pública `https://oatelier21.com.br/login` responde `200 OK`
 - as credenciais geradas no webhook já foram testadas com sucesso no login e no `verify`
+- o contato oficial de suporte agora é `suporte@oatelier21.com.br`
+- os emails automáticos usam `reply_to` para `SUPPORT_EMAIL`
 
 - [x] Confirmar `RESEND_API_KEY`
 - [x] Confirmar `RESEND_FROM_EMAIL` ou `EMAIL_FROM`
+- [x] Confirmar `SUPPORT_EMAIL`
 - [x] Confirmar `APP_LOGIN_URL`
 - [x] Verificar domínio `oatelier21.com.br` na Resend
 - [x] Testar criação de usuária com envio de email
@@ -305,6 +318,9 @@ Próximos passos externos:
 - [ ] Confirmar acesso à área de membros
 - [ ] Confirmar logout
 - [ ] Confirmar novo login após logout
+- [x] Confirmar acesso ao painel `/admin`
+- [x] Confirmar envio do código de admin por email
+- [x] Confirmar atualização em tempo real do painel admin
 
 ---
 
@@ -312,9 +328,11 @@ Próximos passos externos:
 
 - [ ] Inserir prova social na LP
 - [ ] Inserir FAQ na LP
-- [ ] Instalar rastreamento de eventos
+- [x] Instalar `PageView` do Meta Pixel
+- [ ] Validar `ViewContent`, `AddToCart`, `InitiateCheckout` e `Purchase`
 - [x] Fazer inspeção inicial dos logs do backend
 - [x] Fazer backup inicial do banco em produção
+- [x] Melhorar PageSpeed com cache estático, imagens otimizadas e `robots.txt`
 
 ---
 

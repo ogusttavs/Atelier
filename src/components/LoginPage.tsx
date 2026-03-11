@@ -2,6 +2,7 @@ import {useEffect, useState, type FormEvent} from 'react';
 import {ArrowRight, ExternalLink, Eye, EyeOff, LifeBuoy, Lock, Mail, ShieldCheck} from 'lucide-react';
 import {useAuth} from '../contexts/AuthContext';
 import {readSavedCheckoutEmail, saveCheckoutEmail} from '../lib/checkoutEmail';
+import {SUPPORT_EMAIL} from '../lib/supportEmail';
 import BrandMark from './BrandMark';
 
 interface LoginPageProps {
@@ -126,12 +127,13 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
     };
 
     return (
-        <div className="min-h-screen bg-[#FFF5F7] flex items-center justify-center px-4 py-12">
+        <main className="min-h-screen bg-[#FFF5F7] flex items-center justify-center px-4 py-12" role="main">
             <div className="w-full max-w-md reveal-up">
                 <div className="text-center mb-8">
-                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#4A3338]/10 ring-1 ring-[#E295A3]/30">
-                        <BrandMark className="h-10 w-10" />
-                    </div>
+                    <BrandMark
+                        iconClassName="h-12 w-12"
+                        wrapperClassName="mx-auto mb-4 rounded-[16px] p-2 shadow-lg shadow-[#4A3338]/10 ring-1 ring-[#E295A3]/30"
+                    />
                     <h1 className="text-2xl font-bold text-[#4A3338]">Atelier 21</h1>
                     <p className="text-sm text-[#A8576A] mt-1">Operacao Pascoa Lucrativa</p>
                 </div>
@@ -145,6 +147,16 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                             ? 'Proteja sua conta criando uma senha forte no primeiro acesso.'
                             : 'Acesse com o email da compra e a senha que voce criou no link de ativacao.'}
                     </p>
+
+                    <div className="mb-5 rounded-2xl border border-[#E9D5DA] bg-[#FFF8F9] px-4 py-3 text-sm text-[#70545A]">
+                        <p className="font-semibold text-[#4A3338]">Suporte oficial</p>
+                        <p className="mt-1">
+                            Se voce precisar de ajuda com acesso, fale com a gente em{' '}
+                            <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-[#D16075] hover:underline">
+                                {SUPPORT_EMAIL}
+                            </a>.
+                        </p>
+                    </div>
 
                     {isSetupMode && (
                         <div className="mb-5 rounded-2xl border border-[#E295A3]/30 bg-[#FFF5F7] px-4 py-3 text-sm text-[#70545A]">
@@ -273,6 +285,9 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                                     <p className="text-sm text-[#70545A]">
                                         Digite o mesmo email usado na compra para receber um novo link de acesso.
                                     </p>
+                                    <p className="text-xs text-[#A8576A]">
+                                        Se preferir atendimento humano, escreva para {SUPPORT_EMAIL}.
+                                    </p>
                                     <div className="relative">
                                         <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A8576A]" />
                                         <input
@@ -308,6 +323,9 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                             Ainda nao tem acesso? Compre aqui <ExternalLink size={14} />
                         </a>
                     )}
+                    <div className="text-xs text-[#70545A]">
+                        Suporte oficial: <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-[#D16075] hover:underline">{SUPPORT_EMAIL}</a>
+                    </div>
                     <div>
                         <button
                             onClick={onGoToSales}
@@ -318,6 +336,6 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     );
 }

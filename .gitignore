@@ -5,5 +5,8 @@ coverage/
 .DS_Store
 *.log
 atelier21.db
+atelier21.db-shm
+atelier21.db-wal
+google Speed/
 .env*
 !.env.example

@@ -1,6 +1,6 @@
 # Plano de Trafego Adaptado ao Metodo Subido - Atelier 21
 
-> Documento operacional adaptado em 10/03/2026.
+> Documento operacional revisado em 11/03/2026.
 > Baseado no contexto atual do projeto Atelier 21 e nas aulas do curso Subido de Trafego consultadas localmente.
 
 ---
@@ -15,6 +15,8 @@
 - webhook, login e area de membros funcionando
 - fluxo principal ja pronto: `Instagram / Conteudo / WhatsApp -> LP -> Checkout -> Acesso`
 - promessa central clara: `o que vender + quanto cobrar + como vender na Pascoa`
+- FAQ estrutural implementada na LP
+- checagem externa do dia: dominio principal respondendo e `/api/health` retornando `ok`
 
 ### Restricoes operacionais informadas
 
@@ -35,7 +37,7 @@ Pela documentacao do projeto, o Atelier 21 hoje nao esta travado por produto nem
 
 - a operacao vai comecar pela `Meta Ads`, porque o projeto ja esta centrado em Instagram, Stories, Reels, LP e WhatsApp
 - o canal principal de conversao continua sendo `LP + checkout`, com WhatsApp como apoio
-- o pixel e os eventos basicos podem ser configurados antes da subida
+- o codigo atual confirma `PageView`; os eventos `ViewContent`, `InitiateCheckout`, `AddToCart` e `Purchase` precisam ser validados antes da publicacao
 - ainda nao existe historico robusto de audiencias quentes
 
 Se alguma dessas hipoteses estiver errada, a adaptacao abaixo continua valida como estrutura, mas a segmentacao e a verba entre conjuntos precisam mudar.
@@ -96,7 +98,7 @@ Operar o Atelier 21 como `infoproduto perpetuo em infraestrutura` com `execucao 
 
 Estas perguntas nao bloqueiam a subida, mas mudam a calibragem:
 
-1. O pixel da Meta ja esta disparando `PageView`, `ViewContent`, `InitiateCheckout` e `Purchase`?
+1. Fora do codigo atual, `ViewContent`, `InitiateCheckout`, `AddToCart` e `Purchase` ja estao validados no ecossistema Meta/Kiwify?
 2. Ja existe publico de Instagram com algum volume relevante de engajamento?
 3. Ja existe trafego na LP para alimentar remarketing?
 4. O WhatsApp comercial ja esta pronto para responder rapido?
@@ -212,7 +214,7 @@ Subir somente quando houver audiencia minima.
 
 - visitantes da pagina de vendas `14 dias`
 - iniciadores de checkout `7 dias`
-- visitantes da LP ou ViewContent `14 dias`
+- visitantes da LP `14 dias`
 
 ### Verba sugerida
 
@@ -415,22 +417,22 @@ Todos os criativos abaixo seguem a linha do curso: ICP claro, anuncio como princ
 
 ## 11. Rotina de execucao para as proximas 24 horas
 
-## Hoje - 10/03/2026
+## Hoje - 11/03/2026
 
-1. validar pixel, dominio e eventos
+1. validar dominio, checkout e eventos
 2. criar publicos:
    - engajamento Instagram/Facebook
    - visualizacao de video
    - seguidores
    - visitantes da LP
-   - initiate checkout
-   - purchase
+   - initiate checkout, se o evento estiver validado
+   - purchase, se o evento estiver validado
 3. subir 3 a 4 criativos
 4. configurar campanha de vendas com ABO
 5. revisar link da LP e carregamento
 6. deixar WhatsApp comercial pronto para resposta
 
-## Amanha - 11/03/2026
+## Publicacao do dia
 
 1. publicar campanha
 2. acompanhar entrega, CPM, CTR, cliques e chegada na LP
@@ -443,6 +445,12 @@ Todos os criativos abaixo seguem a linha do curso: ICP claro, anuncio como princ
 2. se houver muito clique e pouca compra, revisar pagina e demonstracao
 3. se houver entrega ruim, revisar criativo primeiro
 4. se houver volume de visitantes, ativar remarketing
+
+## Nota de estado real
+
+- o plano parte de uma base tecnica pronta para vender
+- o codigo atual comprova `PageView` do Meta Pixel
+- a publicacao paga de hoje depende de validar no Gerenciador de Eventos os eventos de fundo de funil antes de otimizar em `Purchase`
 
 ---
 
@@ -492,4 +500,3 @@ O que nao deveria ser alterado agora:
 - `m2a6_como_fazer_uma_pesquisa_de_icp`
 - `m2a7_anuncios_o_segredo_dos_anuncios_online`
 - `m6a10_distribuicao_de_conteudo`
-

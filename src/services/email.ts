@@ -29,7 +29,7 @@ function escapeHtml(value: string): string {
 }
 
 function extractSupportEmailAddress(): string {
-  const raw = process.env.SUPPORT_EMAIL || process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'acesso@oatelier21.com.br';
+  const raw = process.env.SUPPORT_EMAIL || process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'suporte@oatelier21.com.br';
   const match = raw.match(/<([^>]+)>/);
   return match?.[1] || raw;
 }
@@ -97,6 +97,7 @@ async function sendAccessEmail({ mode, to, name, setupUrl }: AccessEmailInput): 
   const safeSetupUrl = escapeHtml(setupUrl);
   const safeEmail = escapeHtml(to);
   const copy = buildEmailCopy(mode);
+  const supportEmail = copy.supportEmail;
   const stepsHtml = copy.steps
     .map((step) => `<li style="margin: 0 0 8px;">${escapeHtml(step)}</li>`)
     .join('');
@@ -110,6 +111,7 @@ async function sendAccessEmail({ mode, to, name, setupUrl }: AccessEmailInput): 
     body: JSON.stringify({
       from: resendFromEmail,
       to: [to],
+      reply_to: supportEmail,
       subject: copy.subject,
       html: `
         <div style="font-family: Arial, sans-serif; color: #4A3338; line-height: 1.6; max-width: 640px; margin: 0 auto;">
@@ -135,7 +137,7 @@ async function sendAccessEmail({ mode, to, name, setupUrl }: AccessEmailInput): 
           <p>Esse link expira em 24 horas e pode ser usado apenas para voce.</p>
           <p>Se preferir, copie este link: ${safeSetupUrl}</p>
           <p>${copy.thanks}</p>
-          <p style="margin-bottom: 0;">Se precisar de ajuda, responda este email ou fale com a gente em <strong>${escapeHtml(copy.supportEmail)}</strong>.</p>
+          <p style="margin-bottom: 0;">Se precisar de ajuda, responda este email ou fale com a gente em <strong>${escapeHtml(supportEmail)}</strong>.</p>
         </div>
       `,
     }),
@@ -180,7 +182,8 @@ export async function sendAdminLoginCodeEmail({ code, to }: AdminLoginEmailInput
 
   const safeCode = escapeHtml(code);
   const safeEmail = escapeHtml(to);
-  const supportEmail = escapeHtml(extractSupportEmailAddress());
+  const supportEmail = extractSupportEmailAddress();
+  const safeSupportEmail = escapeHtml(supportEmail);
 
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -191,6 +194,7 @@ export async function sendAdminLoginCodeEmail({ code, to }: AdminLoginEmailInput
     body: JSON.stringify({
       from: resendFromEmail,
       to: [to],
+      reply_to: supportEmail,
       subject: 'Seu codigo de acesso ao painel Atelier 21',
       html: `
         <div style="font-family: Arial, sans-serif; color: #4A3338; line-height: 1.6; max-width: 640px; margin: 0 auto;">
@@ -202,7 +206,7 @@ export async function sendAdminLoginCodeEmail({ code, to }: AdminLoginEmailInput
             <p style="margin: 0; font-size: 32px; font-weight: bold; letter-spacing: 6px;">${safeCode}</p>
           </div>
           <p>Se voce nao pediu esse codigo, pode ignorar este email.</p>
-          <p style="margin-bottom: 0;">Se precisar de ajuda, fale com a gente em <strong>${supportEmail}</strong>.</p>
+          <p style="margin-bottom: 0;">Se precisar de ajuda, fale com a gente em <strong>${safeSupportEmail}</strong>.</p>
         </div>
       `,
     }),

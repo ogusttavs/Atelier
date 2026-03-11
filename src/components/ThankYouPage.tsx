@@ -2,13 +2,12 @@ import {useEffect, useState, type FormEvent} from 'react';
 import {ArrowRight, CheckCircle2, HeartHandshake, LockKeyhole, MailCheck, PartyPopper} from 'lucide-react';
 import {useAuth} from '../contexts/AuthContext';
 import {readSavedCheckoutEmail, saveCheckoutEmail} from '../lib/checkoutEmail';
+import {SUPPORT_EMAIL} from '../lib/supportEmail';
 
 interface ThankYouPageProps {
   onGoToLogin: () => void;
   onGoToSales: () => void;
 }
-
-const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || 'acesso@oatelier21.com.br';
 
 function getEmailFromQuery(): string {
   const params = new URLSearchParams(window.location.search);
@@ -88,7 +87,7 @@ export default function ThankYouPage({ onGoToLogin, onGoToSales }: ThankYouPageP
   };
 
   return (
-    <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#FFF0F3_0%,#FFF7F8_40%,#F8ECEF_100%)] px-4 py-12 text-[#4A3338]">
+    <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#FFF0F3_0%,#FFF7F8_40%,#F8ECEF_100%)] px-4 py-12 text-[#4A3338]" role="main">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <section className="rounded-[32px] border border-white/70 bg-white/85 p-8 shadow-[0_30px_90px_-40px_rgba(122,66,77,0.45)] backdrop-blur md:p-10">
@@ -245,6 +244,6 @@ export default function ThankYouPage({ onGoToLogin, onGoToSales }: ThankYouPageP
           </aside>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

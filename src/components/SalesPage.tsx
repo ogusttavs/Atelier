@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import BrandMark from './BrandMark';
+import {SUPPORT_EMAIL} from '../lib/supportEmail';
 
 interface SalesPageProps {
   onBuy: () => void;
@@ -20,10 +21,9 @@ interface SalesPageProps {
   onPreloadLogin?: () => void;
 }
 
-const HERO_IMAGE = '/images/hero-pascoa.jpeg';
-const MOBILE_HERO_IMAGE = '/images/hero-pascoa.jpeg';
-const OFFER_IMAGE =
-  'https://images.unsplash.com/photo-1522273400909-fd1a8f77637e?q=70&w=1280&auto=format&fit=crop';
+const HERO_IMAGE_DESKTOP = '/images/hero-pascoa-desktop.jpg';
+const HERO_IMAGE_MOBILE = '/images/hero-pascoa-mobile.jpg';
+const OFFER_IMAGE = '/images/offer-pascoa.jpg';
 
 const METHOD_PILLARS = [
   {
@@ -151,22 +151,38 @@ const FAQ_ITEMS = [
 export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: SalesPageProps) {
   const firstCheckoutRef = useRef<HTMLButtonElement | null>(null);
   const [showStickyCheckout, setShowStickyCheckout] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(() => window.innerWidth < 640);
+  const [showDeferredSections, setShowDeferredSections] = useState(false);
 
   useEffect(() => {
     const firstCheckoutButton = firstCheckoutRef.current;
     if (!firstCheckoutButton) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setShowStickyCheckout(!entry.isIntersecting);
-      },
-      {
-        threshold: 0.35,
-      },
-    );
+    const updateStickyCheckout = () => {
+      const {bottom} = firstCheckoutButton.getBoundingClientRect();
+      setShowStickyCheckout(bottom < Math.min(window.innerHeight * 0.2, 140));
+    };
 
-    observer.observe(firstCheckoutButton);
-    return () => observer.disconnect();
+    updateStickyCheckout();
+
+    window.addEventListener('scroll', updateStickyCheckout, {passive: true});
+    window.addEventListener('resize', updateStickyCheckout);
+
+    return () => {
+      window.removeEventListener('scroll', updateStickyCheckout);
+      window.removeEventListener('resize', updateStickyCheckout);
+    };
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 639px)');
+    const updateViewport = () => {
+      setIsMobileViewport(mediaQuery.matches);
+    };
+
+    updateViewport();
+    mediaQuery.addEventListener('change', updateViewport);
+    return () => mediaQuery.removeEventListener('change', updateViewport);
   }, []);
 
   useEffect(() => {
@@ -190,42 +206,85 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
 
     revealElements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
+  }, [showDeferredSections]);
+
+  useEffect(() => {
+    if (showDeferredSections) return;
+
+    let isCancelled = false;
+    const revealSections = () => {
+      if (!isCancelled) setShowDeferredSections(true);
+    };
+
+    const onScroll = () => {
+      if (window.scrollY > 120) {
+        revealSections();
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+
+    const requestIdle = window.requestIdleCallback?.bind(window);
+    const cancelIdle = window.cancelIdleCallback?.bind(window);
+
+    if (requestIdle && cancelIdle) {
+      const idleId = requestIdle(revealSections, {timeout: 900});
+      return () => {
+        isCancelled = true;
+        window.removeEventListener('scroll', onScroll);
+        cancelIdle(idleId);
+      };
+    }
+
+    const timeoutId = window.setTimeout(revealSections, 700);
+    return () => {
+      isCancelled = true;
+      window.removeEventListener('scroll', onScroll);
+      window.clearTimeout(timeoutId);
+    };
+  }, [showDeferredSections]);
 
   return (
-    <div className="w-full pb-28 sm:pb-32">
+    <main className="w-full pb-28 sm:pb-32" role="main">
       <section className="relative pt-16 pb-10 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[430px] sm:hidden" aria-hidden="true">
-          <img
-            src={MOBILE_HERO_IMAGE}
-            alt=""
-            className="h-full w-full object-cover object-[center_22%]"
-            width="800"
-            height="1000"
-            loading="lazy"
-            decoding="async"
-            sizes="100vw"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-white/18" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#4A3338]/22 via-[#FFF5F7]/52 to-[#FFF5F7]" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#FFF5F7]" />
-        </div>
+        {isMobileViewport && (
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[430px]" aria-hidden="true">
+            <img
+              src={HERO_IMAGE_MOBILE}
+              alt=""
+              className="h-full w-full object-cover object-[center_22%]"
+              width="640"
+              height="822"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-white/18" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#4A3338]/22 via-[#FFF5F7]/52 to-[#FFF5F7]" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#FFF5F7]" />
+          </div>
+        )}
 
         <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
           <div className="relative pt-28 sm:pt-0 text-center lg:text-left reveal-up">
             <span className="absolute left-1/2 top-0 z-10 inline-flex w-max -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-[#E295A3]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#A8576A] sm:static sm:mb-6 sm:translate-x-0 sm:gap-2 sm:px-3 sm:text-sm sm:tracking-wider">
-              <BrandMark className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" decorative /> Atelier 21 • Operação Páscoa Lucrativa
+              <BrandMark
+                iconClassName="h-5 w-5 sm:h-6 sm:w-6"
+                wrapperClassName="rounded-[8px] p-0.5"
+                decorative
+              /> Atelier 21 • Operação Páscoa Lucrativa
             </span>
             <h1 className="mb-4 text-[2.15rem] font-extrabold tracking-tight leading-[1.04] text-[#4A3338] sm:text-4xl sm:leading-tight md:text-5xl">
-              Faça <span className="text-[#D16075]">dinheiro com doces</span> nesta Páscoa
+              Faça <span className="text-[#B84D61]">dinheiro com doces</span> nesta Páscoa
             </h1>
             <p className="mx-auto mb-4 max-w-2xl text-lg font-semibold leading-relaxed text-[#70545A] lg:mx-0 sm:text-xl">
               Sem travar no cardápio, no preço e na venda. A Operação Páscoa Lucrativa te dá um caminho direto para escolher o que vender, precificar com segurança e abrir encomendas com mais clareza nesta data.
             </p>
 
             <p className="mx-auto mb-6 max-w-2xl text-sm leading-relaxed text-[#70545A] lg:mx-0 sm:text-base">
-              Você entra com <strong className="text-[#D16075]">10 receitas clássicas</strong>, <strong className="text-[#D16075]">5 queridinhos do TikTok</strong>, uma <strong className="text-[#D16075]">calculadora de precificação</strong> e um <strong className="text-[#D16075]">plano simples de execução</strong>.
+              Você entra com <strong className="text-[#B84D61]">10 receitas clássicas</strong>, <strong className="text-[#B84D61]">5 queridinhos do TikTok</strong>, uma <strong className="text-[#B84D61]">calculadora de precificação</strong> e um <strong className="text-[#B84D61]">plano simples de execução</strong>.
             </p>
 
             <div className="mb-6 flex flex-wrap justify-center gap-2 lg:justify-start">
@@ -241,9 +300,9 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
             </div>
 
             <div className="inline-block bg-[#FFF5F7] border-2 border-[#D16075]/30 rounded-2xl px-6 py-3 mb-6 shadow-sm">
-              <p className="text-2xl sm:text-3xl font-black text-[#D16075] flex items-center justify-center lg:justify-start gap-3 flex-wrap">
+              <p className="text-2xl sm:text-3xl font-black text-[#B84D61] flex items-center justify-center lg:justify-start gap-3 flex-wrap">
                 Apenas R$ 49,90
-                <span className="text-sm sm:text-base font-bold text-[#A8576A] bg-[#E295A3]/20 px-3 py-1 rounded-full">
+                <span className="text-sm sm:text-base font-bold text-[#8E4355] bg-[#F5D7DE] px-3 py-1 rounded-full">
                   Acesso Vitalício
                 </span>
               </p>
@@ -253,7 +312,7 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
               <button
                 ref={firstCheckoutRef}
                 onClick={onBuy}
-                className="w-full sm:w-auto px-8 py-4 bg-[#D16075] hover:bg-[#B84D61] text-white rounded-xl font-bold text-lg shadow-lg shadow-[#D16075]/30 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 bg-[#B84D61] hover:bg-[#9F4356] text-white rounded-xl font-bold text-lg shadow-lg shadow-[#D16075]/30 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
               >
                 Quero montar minha Páscoa com clareza <ArrowRight size={20} />
               </button>
@@ -272,22 +331,25 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
               <p className="text-xs font-medium text-[#70545A] sm:text-sm">
                 Acesso imediato, vitalicio e 7 dias de garantia.
               </p>
+              <p className="max-w-xl text-xs leading-relaxed text-[#70545A] sm:text-sm">
+                Suporte oficial antes e depois da compra: <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-[#B84D61] hover:underline">{SUPPORT_EMAIL}</a>
+              </p>
             </div>
           </div>
 
-          <div className="relative hidden sm:block reveal-up" style={{ animationDelay: '120ms' }}>
+          {!isMobileViewport && (
+            <div className="relative hidden sm:block reveal-up" style={{ animationDelay: '120ms' }}>
             <div className="absolute inset-0 bg-gradient-to-tr from-[#E295A3]/40 to-transparent rounded-full blur-3xl -z-10 transform scale-110" />
             <img
-              src={HERO_IMAGE}
+              src={HERO_IMAGE_DESKTOP}
               alt="Ovo de Páscoa recheado com creme e acabamento de chocolate"
               className="w-full rounded-3xl border-4 border-white object-cover shadow-[0_35px_90px_-35px_rgba(74,51,56,0.38)] aspect-[4/5]"
               width="1200"
-              height="1500"
+              height="1543"
               fetchPriority="high"
               loading="eager"
               decoding="async"
-              sizes="(min-width: 1024px) 42rem, 100vw"
-              referrerPolicy="no-referrer"
+              sizes="(min-width: 1024px) 42rem, 50vw"
             />
             <div
               className="absolute -bottom-5 left-6 rounded-2xl border border-[#FFF5F7] bg-white p-4 shadow-xl"
@@ -295,10 +357,13 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#A8576A]">Operacao em 3 frentes</p>
               <p className="mt-1 text-sm font-bold text-[#4A3338]">Escolher o cardapio, precificar e abrir as vendas.</p>
             </div>
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
+      {showDeferredSections ? (
+        <>
       <section className="pt-10 pb-24 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto deferred-section scroll-reveal" data-reveal>
         <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#4A3338] mb-4">Veja o que existe dentro da Operação Páscoa Lucrativa</h2>
@@ -560,7 +625,6 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
               loading="lazy"
               decoding="async"
               sizes="(min-width: 1024px) 48rem, 100vw"
-              referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
           </div>
@@ -594,6 +658,9 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
       {onAccessMember && (
         <section className="py-8 px-4 sm:px-6 lg:px-8 bg-[#4A3338]">
           <div className="max-w-3xl mx-auto text-center">
+            <p className="mb-4 text-sm text-[#F3D7DD]">
+              Suporte oficial do Atelier 21: <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-white hover:underline">{SUPPORT_EMAIL}</a>
+            </p>
             <button
               onClick={onAccessMember}
               onMouseEnter={onPreloadLogin}
@@ -604,6 +671,10 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
             </button>
           </div>
         </section>
+      )}
+        </>
+      ) : (
+        <div className="mx-auto min-h-[28rem] max-w-7xl px-4 sm:px-6 lg:px-8" aria-hidden="true" />
       )}
 
       <div
@@ -626,12 +697,12 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
 
           <button
             onClick={onBuy}
-            className="shrink-0 rounded-2xl bg-[#D16075] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#D16075]/30 transition-all hover:bg-[#B84D61] sm:px-7 sm:text-base"
+            className="shrink-0 rounded-2xl bg-[#B84D61] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#D16075]/30 transition-all hover:bg-[#9F4356] sm:px-7 sm:text-base"
           >
             Ir para o checkout
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

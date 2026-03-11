@@ -1,5 +1,6 @@
 import {Suspense, startTransition, useEffect, useState} from 'react';
-import {BookOpen, Calculator, LogOut, TrendingUp} from 'lucide-react';
+import {BookOpen, Calculator, LifeBuoy, LogOut, TrendingUp} from 'lucide-react';
+import {SUPPORT_EMAIL} from '../lib/supportEmail';
 import {lazyWithPreload} from '../utils/lazyWithPreload';
 import BrandMark from './BrandMark';
 
@@ -74,7 +75,11 @@ export default function MemberArea({onLogout}: MemberAreaProps) {
       <aside className="hidden md:flex w-64 bg-[#4A3338] text-[#FFF5F7] flex-col shadow-xl z-10 sticky top-0 h-screen">
         <div className="p-6 border-b border-[#5E4249]">
           <h1 className="text-xl font-bold text-[#E295A3] flex items-center gap-2">
-            <BrandMark className="h-[18px] w-[18px]" decorative /> Atelier 21
+            <BrandMark
+              iconClassName="h-5 w-5"
+              wrapperClassName="rounded-[8px] p-0.5"
+              decorative
+            /> Atelier 21
           </h1>
           <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">Operação Páscoa Lucrativa</p>
         </div>
@@ -99,6 +104,13 @@ export default function MemberArea({onLogout}: MemberAreaProps) {
         </nav>
 
         <div className="p-4 border-t border-[#5E4249]">
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className="mb-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-gray-300 transition-all hover:bg-[#5E4249]"
+          >
+            <LifeBuoy size={20} />
+            <span>Suporte oficial</span>
+          </a>
           <button
             onClick={onLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#5E4249] text-gray-300 transition-all text-left"
@@ -124,6 +136,14 @@ export default function MemberArea({onLogout}: MemberAreaProps) {
         ))}
 
         <button
+          onClick={() => window.location.href = `mailto:${SUPPORT_EMAIL}`}
+          className="flex flex-col items-center p-2 text-gray-400 hover:text-white transition-colors"
+        >
+          <LifeBuoy size={22} />
+          <span className="text-[10px] mt-1 font-medium">Suporte</span>
+        </button>
+
+        <button
           onClick={onLogout}
           className="flex flex-col items-center p-2 text-gray-400 hover:text-white transition-colors"
         >
@@ -134,12 +154,22 @@ export default function MemberArea({onLogout}: MemberAreaProps) {
 
       <header className="md:hidden bg-[#4A3338] text-white p-4 flex flex-col items-center justify-center shadow-md sticky top-0 z-40">
         <h1 className="text-lg font-bold text-[#E295A3] flex items-center gap-2">
-          <BrandMark className="h-4 w-4" decorative /> Atelier 21
+          <BrandMark
+            iconClassName="h-5 w-5"
+            wrapperClassName="rounded-[8px] p-0.5"
+            decorative
+          /> Atelier 21
         </h1>
         <p className="text-[10px] text-gray-400 mt-0.5 uppercase tracking-wider">Operação Páscoa Lucrativa</p>
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12">
+        <div className="mb-6 rounded-3xl border border-[#E9D5DA] bg-white/85 px-5 py-4 text-sm text-[#70545A] shadow-sm">
+          <p className="font-semibold text-[#4A3338]">Suporte oficial do Atelier 21</p>
+          <p className="mt-1">
+            Qualquer duvida de acesso, plataforma ou compra: <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-[#D16075] hover:underline">{SUPPORT_EMAIL}</a>
+          </p>
+        </div>
         <div className="reveal-up">
           <Suspense fallback={<ContentLoader />}>
             <ActiveTabComponent />

@@ -83,7 +83,17 @@ Ou seja:
 
 ### 7. O admin fica mais escondido
 
-As rotas de admin usam um segredo proprio e aceitam IPs permitidos.
+Hoje o painel administrativo nao depende mais de uma senha fixa visivel.
+
+Quando alguem autorizado quer entrar:
+
+- pede um codigo
+- esse codigo vai para o email administrativo
+- o codigo dura pouco tempo
+
+Isso e como uma chave que aparece so por alguns minutos e depois some.
+
+As rotas tecnicas de admin ainda usam um segredo proprio e aceitam IPs permitidos.
 
 Na pratica, e como ter uma porta separada com senha extra.
 
@@ -110,6 +120,18 @@ Hoje a aplicacao esta atras do Nginx e roda no PM2.
 O servidor responde por HTTPS e a API interna fica na porta local.
 
 Isso e melhor do que deixar tudo aberto para a internet sem filtro.
+
+### 11. O suporte oficial agora tem caixa de email propria
+
+O suporte humano oficial ficou em:
+
+`suporte@oatelier21.com.br`
+
+Isso ajuda porque:
+
+- a cliente sabe exatamente para onde pedir ajuda
+- os emails automáticos podem responder para esse endereco
+- o atendimento humano fica separado do envio tecnico do sistema
 
 ## O que esta mais importante hoje
 
