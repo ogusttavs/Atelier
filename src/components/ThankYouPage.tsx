@@ -1,6 +1,7 @@
 import {useEffect, useState, type FormEvent} from 'react';
 import {ArrowRight, CheckCircle2, HeartHandshake, LockKeyhole, MailCheck, PartyPopper} from 'lucide-react';
 import {useAuth} from '../contexts/AuthContext';
+import {readSavedCheckoutEmail, saveCheckoutEmail} from '../lib/checkoutEmail';
 
 interface ThankYouPageProps {
   onGoToLogin: () => void;
@@ -11,7 +12,7 @@ const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || 'acesso@oatelier21.c
 
 function getEmailFromQuery(): string {
   const params = new URLSearchParams(window.location.search);
-  return params.get('email') || '';
+  return params.get('email') || params.get('customer_email') || params.get('buyer_email') || '';
 }
 
 const STEPS = [
@@ -35,13 +36,28 @@ const STEPS = [
 export default function ThankYouPage({ onGoToLogin, onGoToSales }: ThankYouPageProps) {
   const { requestAccess } = useAuth();
   const [email, setEmail] = useState('');
+  const [detectedEmail, setDetectedEmail] = useState('');
+  const [emailSource, setEmailSource] = useState<'query' | 'saved' | null>(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const emailFromQuery = getEmailFromQuery();
-    if (emailFromQuery) setEmail(emailFromQuery);
+    if (emailFromQuery) {
+      const normalized = saveCheckoutEmail(emailFromQuery);
+      setEmail(normalized);
+      setDetectedEmail(normalized);
+      setEmailSource('query');
+      return;
+    }
+
+    const savedEmail = readSavedCheckoutEmail();
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setDetectedEmail(savedEmail);
+      setEmailSource('saved');
+    }
   }, []);
 
   const handleResend = async (event: FormEvent) => {
@@ -54,8 +70,13 @@ export default function ThankYouPage({ onGoToLogin, onGoToSales }: ThankYouPageP
       return;
     }
 
+    const normalized = saveCheckoutEmail(email);
+    setEmail(normalized);
+    setDetectedEmail(normalized);
+    if (!emailSource) setEmailSource('saved');
+
     setIsSubmitting(true);
-    const result = await requestAccess(email);
+    const result = await requestAccess(normalized);
 
     if (result.success) {
       setMessage(result.message || 'Se encontramos uma compra ativa neste email, enviamos um novo link de acesso.');
@@ -83,8 +104,16 @@ export default function ThankYouPage({ onGoToLogin, onGoToSales }: ThankYouPageP
 
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[#70545A]">
               Agora o proximo passo e simples: receber o nosso email, criar sua senha e entrar na area de membros.
-              Se voce nao encontrar o email em alguns minutos, pode reenviar o acesso aqui mesmo.
+              Se voce nao encontrar o email em ate 1 minuto, pode reenviar o acesso aqui mesmo.
             </p>
+
+            <div className="mt-6 rounded-[24px] border border-[#F2D6DC] bg-[#FFF8F9] p-5">
+              <p className="text-sm font-bold text-[#4A3338]">O que deve acontecer agora</p>
+              <p className="mt-2 text-sm leading-relaxed text-[#70545A]">
+                1. A compra aprovada libera seu acesso. 2. Nosso email chega com o link para criar sua senha. 3. Depois
+                disso, voce entra normalmente na plataforma.
+              </p>
+            </div>
 
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {STEPS.map(({ title, description, icon: Icon }) => (
@@ -124,6 +153,29 @@ export default function ThankYouPage({ onGoToLogin, onGoToSales }: ThankYouPageP
               Se a compra ja foi aprovada e voce nao recebeu o email, use o mesmo email informado no checkout.
             </p>
 
+            <div className="mt-5 rounded-[24px] border border-[#E9D5DA] bg-[#FFF8F9] p-5">
+              <p className="text-sm font-bold text-[#4A3338]">
+                {emailSource === 'query'
+                  ? 'Email detectado da compra'
+                  : emailSource === 'saved'
+                    ? 'Email lembrado neste navegador'
+                    : 'Email da compra nao detectado'}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-[#70545A]">
+                {emailSource === 'query' && detectedEmail
+                  ? `Identificamos ${detectedEmail}. Se foi esse o email usado no checkout, basta reenviar o acesso ou abrir o login.`
+                  : emailSource === 'saved' && detectedEmail
+                    ? `Preenchemos ${detectedEmail} com base no ultimo email usado neste navegador. Se precisar, voce pode trocar abaixo.`
+                    : 'A Kiwify nem sempre envia o email do comprador na URL de redirecionamento. Se isso acontecer, digite abaixo o mesmo email usado no pagamento.'}
+              </p>
+              {emailSource === 'saved' && detectedEmail && (
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[#F0CCD4] bg-white px-3 py-1.5 text-xs font-semibold text-[#A8576A]">
+                  <CheckCircle2 size={14} />
+                  Email lembrado com seguranca neste navegador
+                </div>
+              )}
+            </div>
+
             <form onSubmit={handleResend} className="mt-6 space-y-4">
               <div>
                 <label className="mb-1.5 block text-sm font-semibold text-[#4A3338]">Email da compra</label>
@@ -160,10 +212,12 @@ export default function ThankYouPage({ onGoToLogin, onGoToSales }: ThankYouPageP
             </form>
 
             <div className="mt-8 space-y-3 rounded-[28px] border border-[#E9D5DA] bg-[#FFF8F9] p-5">
-              <p className="text-sm font-bold text-[#4A3338]">Se voce acabou de pagar agora</p>
-              <p className="text-sm leading-relaxed text-[#70545A]">
-                O webhook pode levar alguns instantes para processar. Se o email nao chegar em 2 ou 3 minutos, use o botao acima.
-              </p>
+              <p className="text-sm font-bold text-[#4A3338]">Antes de reenviar, confira isto</p>
+              <ul className="space-y-2 text-sm leading-relaxed text-[#70545A]">
+                <li>Veja se o email caiu em spam, lixo eletronico ou promocoes.</li>
+                <li>Procure por mensagens enviadas por Atelier 21 em ate 1 minuto apos a compra.</li>
+                <li>Confirme se voce digitou exatamente o mesmo email usado no checkout.</li>
+              </ul>
             </div>
 
             <div className="mt-8 flex flex-col gap-3">
@@ -172,8 +226,14 @@ export default function ThankYouPage({ onGoToLogin, onGoToSales }: ThankYouPageP
                 onClick={onGoToLogin}
                 className="rounded-2xl border border-[#D16075]/20 bg-white px-5 py-3 text-base font-bold text-[#A8576A] transition hover:border-[#D16075]/35 hover:bg-[#FFF5F7]"
               >
-                Ir para o login
+                Abrir pagina de login
               </button>
+              <a
+                href={`mailto:${SUPPORT_EMAIL}`}
+                className="rounded-2xl border border-[#D16075]/15 bg-[#FFF7F8] px-5 py-3 text-center text-sm font-semibold text-[#70545A] transition hover:border-[#D16075]/30 hover:text-[#D16075]"
+              >
+                Falar com o suporte
+              </a>
               <button
                 type="button"
                 onClick={onGoToSales}

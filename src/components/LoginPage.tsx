@@ -1,6 +1,8 @@
 import {useEffect, useState, type FormEvent} from 'react';
-import {ArrowRight, ExternalLink, Eye, EyeOff, Heart, LifeBuoy, Lock, Mail, ShieldCheck} from 'lucide-react';
+import {ArrowRight, ExternalLink, Eye, EyeOff, LifeBuoy, Lock, Mail, ShieldCheck} from 'lucide-react';
 import {useAuth} from '../contexts/AuthContext';
+import {readSavedCheckoutEmail, saveCheckoutEmail} from '../lib/checkoutEmail';
+import BrandMark from './BrandMark';
 
 interface LoginPageProps {
     onSuccess: () => void;
@@ -21,6 +23,7 @@ function readSetupParams() {
 export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: LoginPageProps) {
     const { login, requestAccess, setupPassword } = useAuth();
     const [email, setEmail] = useState('');
+    const [emailHint, setEmailHint] = useState<'query' | 'saved' | null>(null);
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -34,9 +37,16 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
 
     useEffect(() => {
         const params = readSetupParams();
+        const knownEmail = params.email || readSavedCheckoutEmail();
+
+        if (knownEmail) {
+            setEmail(knownEmail);
+            setRecoveryEmail(knownEmail);
+            setEmailHint(params.email ? 'query' : 'saved');
+        }
+
         if (params.email) {
-            setEmail(params.email);
-            setRecoveryEmail(params.email);
+            saveCheckoutEmail(params.email);
         }
         if (params.setupToken) setSetupToken(params.setupToken);
     }, []);
@@ -70,6 +80,7 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
 
             const result = await setupPassword(email, setupToken, password);
             if (result.success) {
+                saveCheckoutEmail(email);
                 window.history.replaceState({}, '', '/member');
                 onSuccess();
             } else {
@@ -82,6 +93,7 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
 
         const success = await login(email, password);
         if (success) {
+            saveCheckoutEmail(email);
             onSuccess();
         } else {
             setError('Email ou senha incorretos.');
@@ -101,6 +113,7 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
         }
 
         setIsRecoverySubmitting(true);
+        saveCheckoutEmail(recoveryEmail);
         const result = await requestAccess(recoveryEmail);
 
         if (result.success) {
@@ -116,8 +129,8 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
         <div className="min-h-screen bg-[#FFF5F7] flex items-center justify-center px-4 py-12">
             <div className="w-full max-w-md reveal-up">
                 <div className="text-center mb-8">
-                    <div className="w-16 h-16 bg-[#D16075] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#D16075]/20">
-                        <Heart size={28} className="text-white" />
+                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#4A3338]/10 ring-1 ring-[#E295A3]/30">
+                        <BrandMark className="h-10 w-10" />
                     </div>
                     <h1 className="text-2xl font-bold text-[#4A3338]">Atelier 21</h1>
                     <p className="text-sm text-[#A8576A] mt-1">Operacao Pascoa Lucrativa</p>
@@ -153,6 +166,7 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                                     value={email}
                                     onChange={(e) => {
                                         setEmail(e.target.value);
+                                        setEmailHint(null);
                                         if (!recoveryEmail) setRecoveryEmail(e.target.value);
                                     }}
                                     placeholder="seu@email.com"
@@ -163,6 +177,12 @@ export default function LoginPage({ onSuccess, onGoToSales, checkoutUrl }: Login
                                     disabled={isSetupMode}
                                 />
                             </div>
+                            {emailHint === 'saved' && (
+                                <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-[#F0CCD4] bg-[#FFF8F9] px-3 py-1 text-xs font-semibold text-[#A8576A]">
+                                    <ShieldCheck size={14} />
+                                    Email lembrado com seguranca neste navegador
+                                </div>
+                            )}
                         </div>
 
                         <div>

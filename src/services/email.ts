@@ -10,6 +10,11 @@ interface EmailResult {
   sent: boolean;
 }
 
+interface AdminLoginEmailInput {
+  code: string;
+  to: string;
+}
+
 function getEmailProvider(): string {
   return (process.env.EMAIL_PROVIDER || 'resend').toLowerCase();
 }
@@ -152,4 +157,63 @@ export function sendWelcomeEmail(input: Omit<AccessEmailInput, 'mode'>): Promise
 
 export function sendRecoveryEmail(input: Omit<AccessEmailInput, 'mode'>): Promise<EmailResult> {
   return sendAccessEmail({ ...input, mode: 'recovery' });
+}
+
+export async function sendAdminLoginCodeEmail({ code, to }: AdminLoginEmailInput): Promise<EmailResult> {
+  const emailProvider = getEmailProvider();
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const resendFromEmail = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM;
+
+  if (emailProvider !== 'resend') {
+    return {
+      sent: false,
+      error: `EMAIL_PROVIDER '${emailProvider}' nao e suportado neste projeto.`,
+    };
+  }
+
+  if (!resendApiKey || !resendFromEmail) {
+    return {
+      sent: false,
+      error: 'RESEND_API_KEY e RESEND_FROM_EMAIL/EMAIL_FROM precisam estar configurados.',
+    };
+  }
+
+  const safeCode = escapeHtml(code);
+  const safeEmail = escapeHtml(to);
+  const supportEmail = escapeHtml(extractSupportEmailAddress());
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: resendFromEmail,
+      to: [to],
+      subject: 'Seu codigo de acesso ao painel Atelier 21',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #4A3338; line-height: 1.6; max-width: 640px; margin: 0 auto;">
+          <h1 style="margin-bottom: 8px;">Codigo de acesso ao painel</h1>
+          <p>Recebemos um pedido para entrar no painel administrativo do Atelier 21.</p>
+          <p><strong>Email autorizado:</strong> ${safeEmail}</p>
+          <div style="background: #FFF5F7; border: 1px solid #E9C5CD; border-radius: 14px; padding: 20px; margin: 20px 0; text-align: center;">
+            <p style="margin: 0 0 8px; font-size: 13px;">Use este codigo nos proximos 10 minutos:</p>
+            <p style="margin: 0; font-size: 32px; font-weight: bold; letter-spacing: 6px;">${safeCode}</p>
+          </div>
+          <p>Se voce nao pediu esse codigo, pode ignorar este email.</p>
+          <p style="margin-bottom: 0;">Se precisar de ajuda, fale com a gente em <strong>${supportEmail}</strong>.</p>
+        </div>
+      `,
+    }),
+  });
+
+  if (!response.ok) {
+    return {
+      sent: false,
+      error: await response.text(),
+    };
+  }
+
+  return { sent: true };
 }

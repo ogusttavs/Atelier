@@ -8,11 +8,11 @@ import {
   Gift,
   LogIn,
   MessageCircle,
-  Rabbit,
   ShieldCheck,
   Star,
   TrendingUp,
 } from 'lucide-react';
+import BrandMark from './BrandMark';
 
 interface SalesPageProps {
   onBuy: () => void;
@@ -215,7 +215,7 @@ export default function SalesPage({ onBuy, onAccessMember, onPreloadLogin }: Sal
         <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
           <div className="relative pt-28 sm:pt-0 text-center lg:text-left reveal-up">
             <span className="absolute left-1/2 top-0 z-10 inline-flex w-max -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-[#E295A3]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#A8576A] sm:static sm:mb-6 sm:translate-x-0 sm:gap-2 sm:px-3 sm:text-sm sm:tracking-wider">
-              <Rabbit size={16} className="text-[#D16075]" /> Atelier 21 • Operação Páscoa Lucrativa
+              <BrandMark className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" decorative /> Atelier 21 • Operação Páscoa Lucrativa
             </span>
             <h1 className="mb-4 text-[2.15rem] font-extrabold tracking-tight leading-[1.04] text-[#4A3338] sm:text-4xl sm:leading-tight md:text-5xl">
               Faça <span className="text-[#D16075]">dinheiro com doces</span> nesta Páscoa

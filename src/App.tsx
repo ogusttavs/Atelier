@@ -4,11 +4,12 @@ import SalesPage from './components/SalesPage';
 import {lazyWithPreload} from './utils/lazyWithPreload';
 
 const KIWIFY_CHECKOUT_URL = import.meta.env.VITE_KIWIFY_CHECKOUT_URL || 'https://pay.kiwify.com.br/avY1khc';
+const AdminDashboardPage = lazyWithPreload(() => import('./components/AdminDashboardPage'));
 const LoginPage = lazyWithPreload(() => import('./components/LoginPage'));
 const MemberArea = lazyWithPreload(() => import('./components/MemberArea'));
 const ThankYouPage = lazyWithPreload(() => import('./components/ThankYouPage'));
 
-type View = 'member' | 'sales' | 'thankyou' | 'login';
+type View = 'admin' | 'member' | 'sales' | 'thankyou' | 'login';
 
 function normalizePath(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, '');
@@ -18,6 +19,7 @@ function normalizePath(pathname: string): string {
 function getViewFromPath(pathname: string): View {
   const normalized = normalizePath(pathname);
 
+  if (normalized === '/admin' || normalized === '/painel' || normalized === '/painel-clientes') return 'admin';
   if (normalized === '/login') return 'login';
   if (normalized === '/obrigado' || normalized === '/thank-you' || normalized === '/obrigado-operacao-pascoa') return 'thankyou';
   if (normalized === '/member' || normalized === '/members' || normalized === '/area-de-membros') return 'member';
@@ -25,6 +27,7 @@ function getViewFromPath(pathname: string): View {
 }
 
 function getPathForView(view: View): string {
+  if (view === 'admin') return '/admin';
   if (view === 'login') return '/login';
   if (view === 'member') return '/member';
   if (view === 'thankyou') return '/obrigado';
@@ -71,6 +74,7 @@ function AppContent() {
 
   useEffect(() => {
     const preloadSecondaryRoutes = () => {
+      AdminDashboardPage.preload();
       LoginPage.preload();
       ThankYouPage.preload();
 
@@ -130,7 +134,7 @@ function AppContent() {
     navigateTo('sales', true);
   };
 
-  if (isLoading && view !== 'sales' && view !== 'thankyou') {
+  if (isLoading && view !== 'sales' && view !== 'thankyou' && view !== 'admin') {
     return <PageLoader />;
   }
 
@@ -149,6 +153,11 @@ function AppContent() {
             onGoToLogin={goToLogin}
             onGoToSales={() => navigateTo('sales')}
           />
+        </Suspense>
+      )}
+      {view === 'admin' && (
+        <Suspense fallback={<PageLoader />}>
+          <AdminDashboardPage onGoToSales={() => navigateTo('sales')} />
         </Suspense>
       )}
       {view === 'login' && (

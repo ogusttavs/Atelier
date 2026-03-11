@@ -1,6 +1,7 @@
 import {Suspense, startTransition, useEffect, useState} from 'react';
-import {BookOpen, Calculator, Heart, LogOut, TrendingUp} from 'lucide-react';
+import {BookOpen, Calculator, LogOut, TrendingUp} from 'lucide-react';
 import {lazyWithPreload} from '../utils/lazyWithPreload';
+import BrandMark from './BrandMark';
 
 interface MemberAreaProps {
   onLogout: () => void;
@@ -73,7 +74,7 @@ export default function MemberArea({onLogout}: MemberAreaProps) {
       <aside className="hidden md:flex w-64 bg-[#4A3338] text-[#FFF5F7] flex-col shadow-xl z-10 sticky top-0 h-screen">
         <div className="p-6 border-b border-[#5E4249]">
           <h1 className="text-xl font-bold text-[#E295A3] flex items-center gap-2">
-            <Heart size={18} className="text-[#D16075]" /> Atelier 21
+            <BrandMark className="h-[18px] w-[18px]" decorative /> Atelier 21
           </h1>
           <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">Operação Páscoa Lucrativa</p>
         </div>
@@ -133,7 +134,7 @@ export default function MemberArea({onLogout}: MemberAreaProps) {
 
       <header className="md:hidden bg-[#4A3338] text-white p-4 flex flex-col items-center justify-center shadow-md sticky top-0 z-40">
         <h1 className="text-lg font-bold text-[#E295A3] flex items-center gap-2">
-          <Heart size={16} className="text-[#D16075]" /> Atelier 21
+          <BrandMark className="h-4 w-4" decorative /> Atelier 21
         </h1>
         <p className="text-[10px] text-gray-400 mt-0.5 uppercase tracking-wider">Operação Páscoa Lucrativa</p>
       </header>
